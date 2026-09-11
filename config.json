@@ -1,0 +1,5 @@
+{
+"project": "eds-ue-project",
+"editUrlLabel": "AEM Editor",
+"editUrlPattern": "{{contentSourceUrl}}{{pathname}}?cmd=open"
+}
