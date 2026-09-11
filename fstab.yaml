@@ -1,5 +1,5 @@
 mountpoints:
   /:
-    url: "https://localhost:8443/bin/franklin.delivery/sravaneds/eds-ue-project/main"
+    url: "http://localhost:4502/bin/franklin.delivery/sravaneds/eds-ue-project/main"
     type: "markup"
     suffix: ".html"
