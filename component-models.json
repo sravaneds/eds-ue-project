@@ -22,11 +22,14 @@
         "label": "Keywords"
       },
       {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Image",
-        "multi": false
+        "component": "aem-content",
+        "name": "link",
+        "label": "LinkOne"
+      },
+      {
+        "component": "aem-content",
+        "name": "linkTwo",
+        "label": "LinkTwo"
       }
     ]
   },
