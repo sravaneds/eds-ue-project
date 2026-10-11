@@ -34,46 +34,30 @@
     ]
   },
   {
-    "id": "adventure-detail-metadata",
-    "fields": [
+    "component": "select",
+    "name": "pageType",
+    "label": "Page Type",
+    "value": "default",
+    "options": [
       {
-        "component": "text",
-        "name": "duration",
-        "label": "Duration"
+        "name": "Default",
+        "value": "default"
       },
       {
-        "component": "select",
-        "name": "difficulty",
-        "label": "Difficulty",
-        "options": [
-          {
-            "name": "Easy",
-            "value": "Easy"
-          },
-          {
-            "name": "Moderate",
-            "value": "Moderate"
-          },
-          {
-            "name": "Hard",
-            "value": "Hard"
-          }
-        ]
+        "name": "Home",
+        "value": "home"
       },
       {
-        "component": "text",
-        "name": "group-size",
-        "label": "Group Size"
+        "name": "Article",
+        "value": "article"
       },
       {
-        "component": "text",
-        "name": "price",
-        "label": "Price"
+        "name": "Blog",
+        "value": "blog"
       },
       {
-        "component": "aem-content",
-        "name": "booking-url",
-        "label": "Booking Page"
+        "name": "Press Release",
+        "value": "press-release"
       }
     ]
   },
