@@ -1,0 +1,55 @@
+/* Adventure detail template — styles for the parts added by adventure-detail.js */
+
+/* trip facts bar (directly below the hero) */
+main > .section.adventure-facts-section {
+  padding: 0;
+  background-color: var(--light-color);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.adventure-facts-section .adventure-facts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap-lg);
+  margin: 0;
+  padding: var(--gap-lg) 0;
+}
+
+.adventure-facts-section .adventure-facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.adventure-facts-section .adventure-facts dt {
+  font-family: var(--heading-font-family);
+  font-size: var(--tag-font-size);
+  font-weight: 700;
+  letter-spacing: var(--tag-letter-spacing);
+  text-transform: uppercase;
+  color: var(--text-color-muted);
+}
+
+.adventure-facts-section .adventure-facts dd {
+  margin: 0;
+  font-size: var(--heading-font-size-s);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* authored overview and itinerary read best at a narrower width */
+body.adventure-detail main > .section:not(.adventure-facts-section, .adventure-booking) > .default-content-wrapper {
+  max-width: var(--container-narrow-max-width);
+}
+
+@media (width >= 768px) {
+  .adventure-facts-section .adventure-facts {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    padding: var(--gap-xl) 0;
+  }
+
+  .adventure-facts-section .adventure-facts > div + div {
+    padding-left: var(--gap-lg);
+    border-left: 1px solid var(--border-color);
+  }
+}
