@@ -38,57 +38,57 @@
         "options": [
           {
             "name": "Default",
-            "value": ""
+            "value": "default"
           },
           {
             "name": "Adventure Detail",
             "value": "adventure-detail"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "adventure-detail-metadata",
+    "fields": [
+      {
+        "component": "text",
+        "name": "duration",
+        "label": "Duration"
       },
       {
-        "id": "adventure-detail-metadata",
-        "fields": [
+        "component": "select",
+        "name": "difficulty",
+        "label": "Difficulty",
+        "options": [
           {
-            "component": "text",
-            "name": "duration",
-            "label": "Duration"
+            "name": "Easy",
+            "value": "Easy"
           },
           {
-            "component": "select",
-            "name": "difficulty",
-            "label": "Difficulty",
-            "options": [
-              {
-                "name": "Easy",
-                "value": "Easy"
-              },
-              {
-                "name": "Moderate",
-                "value": "Moderate"
-              },
-              {
-                "name": "Hard",
-                "value": "Hard"
-              }
-            ]
+            "name": "Moderate",
+            "value": "Moderate"
           },
           {
-            "component": "text",
-            "name": "group-size",
-            "label": "Group Size"
-          },
-          {
-            "component": "text",
-            "name": "price",
-            "label": "Price"
-          },
-          {
-            "component": "aem-content",
-            "name": "booking-url",
-            "label": "Booking Page"
+            "name": "Hard",
+            "value": "Hard"
           }
         ]
+      },
+      {
+        "component": "text",
+        "name": "group-size",
+        "label": "Group Size"
+      },
+      {
+        "component": "text",
+        "name": "price",
+        "label": "Price"
+      },
+      {
+        "component": "aem-content",
+        "name": "booking-url",
+        "label": "Booking Page"
       }
     ]
   },
