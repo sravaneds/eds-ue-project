@@ -9,8 +9,12 @@ import {
   loadSection,
   loadSections,
   loadCSS,
-} from './aem.js';
+  getMetadata,
+  toClassName,
 
+} from './aem.js';
+/** Page templates with their own code in /templates/{name}/ */
+const TEMPLATES = ['adventure-detail'];
 /**
  * Moves all the attributes from a given elmenet to another given element.
  * @param {Element} from the element to copy attributes from
@@ -123,6 +127,27 @@ export function decorateMain(main) {
 }
 
 /**
+ * Loads the JS and CSS of the page template set in metadata ("Template").
+ * The template runs before the main content is decorated, so any sections
+ * it adds are decorated the same way as authored content.
+ * @param {Element} main The main element
+ */
+async function loadTemplate(main) {
+  const name = toClassName(getMetadata('template'));
+  if (!TEMPLATES.includes(name)) return;
+  try {
+    const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/templates/${name}/${name}.css`);
+    const mod = await import(`${window.hlx.codeBasePath}/templates/${name}/${name}.js`);
+    if (mod.default) await mod.default(main);
+    await cssLoaded;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Failed to load template ${name}`, error);
+  }
+}
+
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -131,6 +156,7 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
+    await loadTemplate(main);
     decorateMain(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);

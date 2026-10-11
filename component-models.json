@@ -30,6 +30,65 @@
         "component": "aem-content",
         "name": "linkTwo",
         "label": "LinkTwo"
+      },
+      {
+        "component": "select",
+        "name": "template",
+        "label": "Template",
+        "options": [
+          {
+            "name": "Default",
+            "value": ""
+          },
+          {
+            "name": "Adventure Detail",
+            "value": "adventure-detail"
+          }
+        ]
+      },
+      {
+        "id": "adventure-detail-metadata",
+        "fields": [
+          {
+            "component": "text",
+            "name": "duration",
+            "label": "Duration"
+          },
+          {
+            "component": "select",
+            "name": "difficulty",
+            "label": "Difficulty",
+            "options": [
+              {
+                "name": "Easy",
+                "value": "Easy"
+              },
+              {
+                "name": "Moderate",
+                "value": "Moderate"
+              },
+              {
+                "name": "Hard",
+                "value": "Hard"
+              }
+            ]
+          },
+          {
+            "component": "text",
+            "name": "group-size",
+            "label": "Group Size"
+          },
+          {
+            "component": "text",
+            "name": "price",
+            "label": "Price"
+          },
+          {
+            "component": "aem-content",
+            "name": "booking-url",
+            "label": "Booking Page"
+          }
+        ]
       }
     ]
   },
