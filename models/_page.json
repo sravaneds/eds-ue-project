@@ -31,10 +31,7 @@
           "component": "aem-content",
           "name": "linkTwo",
           "label": "LinkTwo"
-        }
-      ]
-    },
-    {
+        },{
           "component": "select",
           "name": "pageType",
           "label": "Page Type",
@@ -62,5 +59,7 @@
             }
           ]
         }
+      ]
+    }
   ]
 }
