@@ -30,21 +30,6 @@
         "component": "aem-content",
         "name": "linkTwo",
         "label": "LinkTwo"
-      },
-      {
-        "component": "select",
-        "name": "template",
-        "label": "Template",
-        "options": [
-          {
-            "name": "Default",
-            "value": "default"
-          },
-          {
-            "name": "Adventure Detail",
-            "value": "adventure-detail"
-          }
-        ]
       }
     ]
   },

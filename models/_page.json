@@ -1,4 +1,19 @@
 {
+  "definitions":[
+    {
+  "title": "Adventure Detail",
+  "id": "adventure-detail",
+  "plugins": {
+    "xwalk": {
+      "page": {
+        "template": {
+          "model": "adventure-detail-metadata"
+        }
+      }
+    }
+  }
+}
+  ],
   "models": [
     {
       "id": "page-metadata",
@@ -31,21 +46,6 @@
           "component": "aem-content",
           "name": "linkTwo",
           "label": "LinkTwo"
-        },
-        {
-          "component": "select",
-          "name": "template",
-          "label": "Template",
-          "options": [
-            {
-              "name": "Default",
-              "value": "default"
-            },
-            {
-              "name": "Adventure Detail",
-              "value": "adventure-detail"
-            }
-          ]
         }
       ]
     },
