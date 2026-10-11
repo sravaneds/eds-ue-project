@@ -36,6 +36,7 @@
           "name": "pageType",
           "label": "Page Type",
           "value": "default",
+          "collapsible": true,
           "options": [
             {
               "name": "Default",
