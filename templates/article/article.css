@@ -1,0 +1,15 @@
+body.article .article-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 16px 0 24px;
+  padding: 12px 0;
+  border-block: 1px solid var(--dark-color);
+  color: var(--dark-color);
+  font-size: var(--body-font-size-s);
+  list-style: none;
+}
+
+body.article .article-details li {
+  margin: 0;
+}

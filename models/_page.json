@@ -23,6 +23,24 @@
           "label": "Keywords"
         },
         {
+          "component": "text",
+          "valueType": "string",
+          "name": "author",
+          "label": "Author"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "publication-date",
+          "label": "Publication Date"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "reading-time",
+          "label": "Reading Time"
+        },
+        {
           "component": "aem-content",
           "name": "link",
           "label": "LinkOne"
@@ -35,15 +53,11 @@
         {
           "component": "select",
           "name": "pageCategory",
-          "label": "Page Type",
+          "label": "Page Category",
           "options": [
             {
               "name": "Default",
               "value": "default"
-            },
-            {
-              "name": "Home",
-              "value": "home"
             },
             {
               "name": "Article",
@@ -54,8 +68,8 @@
               "value": "blog"
             },
             {
-              "name": "Press Release",
-              "value": "press-release"
+              "name": "New",
+              "value": "new"
             }
           ]
         }

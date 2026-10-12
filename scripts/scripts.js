@@ -14,7 +14,7 @@ import {
 
 } from './aem.js';
 /** Page templates with their own code in /templates/{name}/ */
-const TEMPLATES = ['adventure-detail'];
+const TEMPLATES = ['adventure-detail', 'article'];
 /**
  * Moves all the attributes from a given elmenet to another given element.
  * @param {Element} from the element to copy attributes from
@@ -133,9 +133,11 @@ export function decorateMain(main) {
  * @param {Element} main The main element
  */
 async function loadTemplate(main) {
-  const name = toClassName(getMetadata('template'));
+  const pageCategory = getMetadata('pageCategory');
+  const name = toClassName((pageCategory === 'article' ? 'article' : ''));
   if (!TEMPLATES.includes(name)) return;
   try {
+    document.body.classList.add(name);
     const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/templates/${name}/${name}.css`);
     const mod = await import(`${window.hlx.codeBasePath}/templates/${name}/${name}.js`);
     if (mod.default) await mod.default(main);
