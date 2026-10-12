@@ -133,7 +133,7 @@ export function decorateMain(main) {
  * @param {Element} main The main element
  */
 async function loadTemplate(main) {
-  const pageCategory = getMetadata('pageCategory');
+  const pageCategory = getMetadata('pagecategory');
   const name = toClassName((pageCategory === 'article' ? 'article' : ''));
   if (!TEMPLATES.includes(name)) return;
   try {
