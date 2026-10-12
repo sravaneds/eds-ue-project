@@ -31,12 +31,11 @@
           "component": "aem-content",
           "name": "linkTwo",
           "label": "LinkTwo"
-        },{
+        },
+        {
           "component": "select",
-          "name": "pageType",
+          "name": "pageCategory",
           "label": "Page Type",
-          "value": "default",
-          "collapsible": true,
           "options": [
             {
               "name": "Default",
