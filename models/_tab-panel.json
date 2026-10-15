@@ -1,0 +1,124 @@
+{
+  "definitions": [
+    {
+      "title": "Tab Panel",
+      "id": "tab-panel",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/section/v1/section",
+            "template": {
+              "name": "Tab Panel",
+              "model": "tab-panel",
+              "filter": "section",
+              "tab-title": "New Tab"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tab-panel",
+      "fields": [
+        {
+          "component": "text",
+          "name": "name",
+          "label": "Section Name",
+          "description": "The label shown for this tab panel in the Content Tree"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tab-title",
+          "label": "Tab Title",
+          "required": true,
+          "validation": {
+            "maxLength": 60
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tab-id",
+          "label": "Tab ID",
+          "description": "Used for deep links (#tab-id). Lowercase letters, numbers and hyphens. Defaults to the tab title.",
+          "validation": {
+            "regExp": "^[a-z0-9-]*$",
+            "customErrorMsg": "Use lowercase letters, numbers and hyphens only"
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tab-icon",
+          "label": "Icon",
+          "description": "Name of an icon in the project's /icons folder, e.g. info"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tab-badge",
+          "label": "Badge",
+          "description": "Short label shown on the tab, e.g. New",
+          "validation": {
+            "maxLength": 20
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tab-description",
+          "label": "Description",
+          "description": "Shown on Card and Mega tab styles",
+          "validation": {
+            "maxLength": 160
+          }
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "tab-thumbnail",
+          "label": "Image Thumbnail",
+          "description": "Shown on the Image tab style",
+          "multi": false
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "tab-active",
+          "label": "Default Active",
+          "description": "Open this tab when the page loads. The first active tab wins.",
+          "value": false
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "tab-disabled",
+          "label": "Disabled",
+          "value": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "tab-analytics",
+          "label": "Analytics Identifier",
+          "description": "Sent with the tab change event for analytics"
+        },
+        {
+          "component": "multiselect",
+          "name": "style",
+          "label": "Style",
+          "options": [
+            {
+              "name": "Highlight",
+              "value": "highlight"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

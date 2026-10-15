@@ -1,0 +1,245 @@
+{
+  "definitions": [
+    {
+      "title": "Tabs",
+      "id": "tabs",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Tabs",
+              "model": "tabs",
+              "classes": "standard",
+              "classes_orientation": "horizontal",
+              "classes_alignment": "align-start",
+              "classes_mobile": "mobile-scroll",
+              "classes_theme": "theme-light",
+              "classes_deeplink": true,
+              "interval": 6
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tabs",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "title",
+          "label": "Heading"
+        },
+        {
+          "component": "select",
+          "name": "titleType",
+          "label": "Heading Type",
+          "valueType": "string",
+          "value": "h2",
+          "options": [
+            {
+              "name": "H2",
+              "value": "h2"
+            },
+            {
+              "name": "H3",
+              "value": "h3"
+            },
+            {
+              "name": "H4",
+              "value": "h4"
+            }
+          ]
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "description",
+          "label": "Description",
+          "value": ""
+        },
+        {
+          "component": "select",
+          "name": "classes",
+          "label": "Tab Style",
+          "valueType": "string",
+          "value": "standard",
+          "options": [
+            {
+              "name": "Standard",
+              "value": "standard"
+            },
+            {
+              "name": "Underline",
+              "value": "underline"
+            },
+            {
+              "name": "Pill",
+              "value": "pill"
+            },
+            {
+              "name": "Card",
+              "value": "card"
+            },
+            {
+              "name": "Icon",
+              "value": "icon-tabs"
+            },
+            {
+              "name": "Numbered",
+              "value": "numbered"
+            },
+            {
+              "name": "Image",
+              "value": "image"
+            },
+            {
+              "name": "Mega",
+              "value": "mega"
+            }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "classes_orientation",
+          "label": "Orientation",
+          "description": "Vertical tabs switch to horizontal below desktop width",
+          "valueType": "string",
+          "value": "horizontal",
+          "options": [
+            {
+              "name": "Horizontal",
+              "value": "horizontal"
+            },
+            {
+              "name": "Vertical",
+              "value": "vertical"
+            }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "classes_alignment",
+          "label": "Alignment",
+          "valueType": "string",
+          "value": "align-start",
+          "options": [
+            {
+              "name": "Start",
+              "value": "align-start"
+            },
+            {
+              "name": "Center",
+              "value": "align-center"
+            },
+            {
+              "name": "End",
+              "value": "align-end"
+            },
+            {
+              "name": "Stretch",
+              "value": "align-stretch"
+            }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "classes_mobile",
+          "label": "Mobile Behaviour",
+          "valueType": "string",
+          "value": "mobile-scroll",
+          "options": [
+            {
+              "name": "Scrollable tabs",
+              "value": "mobile-scroll"
+            },
+            {
+              "name": "Accordion",
+              "value": "mobile-accordion"
+            },
+            {
+              "name": "Dropdown",
+              "value": "mobile-dropdown"
+            }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "classes_theme",
+          "label": "Theme Variant",
+          "valueType": "string",
+          "value": "theme-light",
+          "options": [
+            {
+              "name": "Light",
+              "value": "theme-light"
+            },
+            {
+              "name": "Dark",
+              "value": "theme-dark"
+            },
+            {
+              "name": "Brand",
+              "value": "theme-brand"
+            }
+          ]
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "classes_icons",
+          "label": "Enable Icons",
+          "description": "Show each tab's icon",
+          "value": false
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "classes_deeplink",
+          "label": "Deep Linking",
+          "description": "Update the URL (#tab-id) when a tab changes and open the tab from links",
+          "value": true
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "classes_sticky",
+          "label": "Sticky Tabs",
+          "description": "Keep the tab bar visible while scrolling long panels",
+          "value": false
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "classes_autorotate",
+          "label": "Auto Rotation",
+          "description": "Cycle through tabs until the visitor interacts. Off for visitors who prefer reduced motion.",
+          "value": false
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "interval",
+          "label": "Auto Rotation Speed (seconds)",
+          "value": 6,
+          "validation": {
+            "numberMin": 3,
+            "numberMax": 30
+          },
+          "condition": {
+            "===": [
+              {
+                "var": "classes_autorotate"
+              },
+              true
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
