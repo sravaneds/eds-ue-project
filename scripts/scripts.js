@@ -127,6 +127,26 @@ export function decorateMain(main) {
 }
 
 /**
+ * Turns Tabs sections (section model "tabs-section") into tabs before they load,
+ * so blocks in closed tabs are only loaded when their tab opens.
+ * The tabs code is only fetched on pages that use it.
+ * @param {Element} main The main element (or any parent of sections)
+ */
+export async function decorateTabSections(main) {
+  const sections = main.querySelectorAll(':scope > div.section:not([data-tabs-status])');
+  const tabSections = [...sections]
+    .filter((section) => section.dataset.tabsStyle || section.dataset.aueModel === 'tabs-section');
+  if (!tabSections.length) return;
+  try {
+    const { default: decorateTabSection } = await import(`${window.hlx.codeBasePath}/blocks/tabs/tabs-section.js`);
+    await Promise.all(tabSections.map((section) => decorateTabSection(section)));
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to decorate tabs sections', error);
+  }
+}
+
+/**
  * Loads the JS and CSS of the page template set in metadata ("Template").
  * The template runs before the main content is decorated, so any sections
  * it adds are decorated the same way as authored content.
@@ -159,6 +179,7 @@ async function loadEager(doc) {
   if (main) {
     await loadTemplate(main);
     decorateMain(main);
+    await decorateTabSections(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }

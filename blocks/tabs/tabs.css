@@ -195,9 +195,33 @@
   display: none;
 }
 
-/* panel content: fragment sections (any blocks) or legacy inline content */
+/* panel content: blocks of a Tabs section, fragment sections (legacy block) or legacy inline content */
+.tabs .tabs-panel-content > div + div {
+  margin-top: var(--tabs-panel-gap);
+}
+
+.tabs .tabs-panel-content > .default-content-wrapper > :first-child {
+  margin-top: 0;
+}
+
 .tabs .tabs-panel-content > .section + .section {
   margin-top: var(--tabs-block-gap);
+}
+
+/* editor only: the Tab marker shown as a selectable settings label at the top of its tab */
+.tabs .tabs-marker {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border: 1px dashed var(--tabs-muted);
+  border-radius: 999px;
+  color: var(--tabs-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tabs .tabs-marker > p {
+  margin: 0;
 }
 
 .tabs .tabs-panel-content > .section > div + div {
@@ -233,7 +257,7 @@
   margin-block: 0 var(--tabs-panel-gap);
 }
 
-/* loading state while a tab's fragment is fetched (min-height avoids layout shift) */
+/* loading state while a tab's content is loaded (min-height avoids layout shift) */
 .tabs .tabs-panel[aria-busy="true"] {
   min-height: var(--tabs-panel-min-height, 120px);
   background: linear-gradient(90deg, var(--tabs-surface-alt) 25%, transparent 50%, var(--tabs-surface-alt) 75%) 0 0 / 200% 100%;
@@ -591,6 +615,7 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
 .tabs.mega > .tabs-header,
 .tabs.mega > .tabs-nav,
 .tabs.mega .tabs-legacy,
+.tabs.mega .tabs-panel-content > div:not(.section),
 .tabs.mega .tabs-panel-content > .section > div,
 .tabs.mega .tabs-accordion-heading {
   box-sizing: border-box;
@@ -601,6 +626,7 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
 }
 
 /* full-bleed blocks (hero) keep their full width inside mega panels */
+.tabs.mega .tabs-panel-content > .hero-wrapper:not(.section),
 .tabs.mega .tabs-panel-content > .section > .hero-wrapper {
   max-width: none;
   padding-inline: 0;

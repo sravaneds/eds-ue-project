@@ -1,0 +1,168 @@
+{
+  "definitions": [
+    {
+      "title": "Tabs",
+      "id": "tabs-section",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/section/v1/section",
+            "template": {
+              "name": "Tabs",
+              "model": "tabs-section",
+              "filter": "section",
+              "tabs-style": "standard",
+              "tabs-orientation": "horizontal",
+              "tabs-alignment": "align-start",
+              "tabs-mobile": "mobile-scroll",
+              "tabs-theme": "theme-light",
+              "tabs-size": "size-default",
+              "tabs-deeplink": true,
+              "tabs-interval": 6
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tabs-section",
+      "fields": [
+        {
+          "component": "text",
+          "name": "name",
+          "label": "Section Name",
+          "description": "The label shown for these tabs in the Content Tree"
+        },
+        {
+          "component": "select",
+          "name": "tabs-style",
+          "label": "Tab Style",
+          "valueType": "string",
+          "value": "standard",
+          "options": [
+            { "name": "Standard", "value": "standard" },
+            { "name": "Underline", "value": "underline" },
+            { "name": "Pill", "value": "pill" },
+            { "name": "Card", "value": "card" },
+            { "name": "Icon", "value": "icon-tabs" },
+            { "name": "Numbered", "value": "numbered" },
+            { "name": "Image", "value": "image" },
+            { "name": "Mega", "value": "mega" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "tabs-orientation",
+          "label": "Orientation",
+          "description": "Vertical tabs switch to horizontal below desktop width",
+          "valueType": "string",
+          "value": "horizontal",
+          "options": [
+            { "name": "Horizontal", "value": "horizontal" },
+            { "name": "Vertical", "value": "vertical" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "tabs-alignment",
+          "label": "Alignment",
+          "valueType": "string",
+          "value": "align-start",
+          "options": [
+            { "name": "Start", "value": "align-start" },
+            { "name": "Center", "value": "align-center" },
+            { "name": "End", "value": "align-end" },
+            { "name": "Full width (stretch)", "value": "align-stretch" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "tabs-mobile",
+          "label": "Mobile Behaviour",
+          "valueType": "string",
+          "value": "mobile-scroll",
+          "options": [
+            { "name": "Scrollable tabs", "value": "mobile-scroll" },
+            { "name": "Accordion", "value": "mobile-accordion" },
+            { "name": "Dropdown", "value": "mobile-dropdown" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "tabs-theme",
+          "label": "Theme Variant",
+          "valueType": "string",
+          "value": "theme-light",
+          "options": [
+            { "name": "Light", "value": "theme-light" },
+            { "name": "Dark", "value": "theme-dark" },
+            { "name": "Brand", "value": "theme-brand" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "tabs-size",
+          "label": "Tab Size",
+          "valueType": "string",
+          "value": "size-default",
+          "options": [
+            { "name": "Default", "value": "size-default" },
+            { "name": "Compact", "value": "compact" }
+          ]
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "tabs-icons",
+          "label": "Enable Icons",
+          "description": "Show each tab's icon",
+          "value": false
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "tabs-deeplink",
+          "label": "Deep Linking",
+          "description": "Update the URL (#tab-id) when a tab changes and open the tab from links",
+          "value": true
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "tabs-sticky",
+          "label": "Sticky Tabs",
+          "description": "Keep the tab bar visible while scrolling long tabs",
+          "value": false
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "tabs-autorotate",
+          "label": "Auto Rotation",
+          "description": "Cycle through tabs until the visitor interacts. Off for visitors who prefer reduced motion.",
+          "value": false
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "tabs-interval",
+          "label": "Auto Rotation Speed (seconds)",
+          "value": 6,
+          "validation": {
+            "numberMin": 3,
+            "numberMax": 30
+          },
+          "condition": {
+            "===": [
+              { "var": "tabs-autorotate" },
+              true
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

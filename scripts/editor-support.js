@@ -8,7 +8,7 @@ import {
   loadSections,
 } from './aem.js';
 import { decorateRichtext } from './editor-support-rte.js';
-import { decorateButtons, decorateMain } from './scripts.js';
+import { decorateButtons, decorateMain, decorateTabSections } from './scripts.js';
 
 let promiseChanges$ = Promise.resolve();
 
@@ -35,12 +35,16 @@ async function applyChanges(event) {
   const element = document.querySelector(`[data-aue-resource="${resource}"]`);
 
   if (element) {
+    // Tab marker settings drive the generated tab bar: reload to rebuild it
+    if (element.closest('.tabs-marker')) return false;
+
     if (element.matches('main')) {
       const newMain = parsedUpdate.querySelector(`[data-aue-resource="${resource}"]`);
       if (!newMain) return false;
       newMain.style.display = 'none';
       element.insertAdjacentElement('afterend', newMain);
       decorateMain(newMain);
+      await decorateTabSections(newMain);
       decorateRichtext(newMain);
       await loadSections(newMain);
       element.remove();
@@ -80,6 +84,7 @@ async function applyChanges(event) {
           decorateRichtext(newSection);
           decorateSections(parentElement);
           decorateBlocks(parentElement);
+          await decorateTabSections(parentElement);
           await loadSections(parentElement);
           element.remove();
           newSection.style.display = null;

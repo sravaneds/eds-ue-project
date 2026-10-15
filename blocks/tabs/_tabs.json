@@ -1,7 +1,7 @@
 {
   "definitions": [
     {
-      "title": "Tabs",
+      "title": "Tabs (legacy)",
       "id": "tabs",
       "plugins": {
         "xwalk": {
@@ -24,7 +24,7 @@
       }
     },
     {
-      "title": "Tab",
+      "title": "Tab (legacy)",
       "id": "tabs-item",
       "plugins": {
         "xwalk": {

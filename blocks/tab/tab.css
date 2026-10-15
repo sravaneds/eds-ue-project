@@ -1,0 +1,9 @@
+/* a Tab marker used outside a Tabs section (editor only) */
+.tab .tab-notice {
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px dashed var(--dark-color);
+  border-radius: 8px;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+}

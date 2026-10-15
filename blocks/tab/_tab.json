@@ -1,0 +1,107 @@
+{
+  "definitions": [
+    {
+      "title": "Tab",
+      "id": "tab",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Tab",
+              "model": "tab",
+              "key-value": true,
+              "title": "New Tab"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tab",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "title",
+          "label": "Tab Title",
+          "required": true,
+          "validation": {
+            "maxLength": 60
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "anchor",
+          "label": "Tab ID",
+          "description": "Used for deep links (#tab-id). Lowercase letters, numbers and hyphens. Defaults to the title.",
+          "validation": {
+            "regExp": "^[a-z0-9-]*$",
+            "customErrorMsg": "Use lowercase letters, numbers and hyphens only"
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "summary",
+          "label": "Description",
+          "description": "Shown on Card, Image and Mega tab styles",
+          "validation": {
+            "maxLength": 160
+          }
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "icon",
+          "label": "Icon",
+          "description": "Name of an icon in the project's /icons folder, e.g. info"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "badge",
+          "label": "Badge",
+          "description": "Short label shown on the tab, e.g. New",
+          "validation": {
+            "maxLength": 20
+          }
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "thumbnail",
+          "label": "Thumbnail",
+          "description": "Shown on the Image tab style",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "analytics",
+          "label": "Analytics Label",
+          "description": "Sent with every analytics event for this tab"
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "active",
+          "label": "Default Active",
+          "description": "Open this tab when the page loads. The first active tab wins.",
+          "value": false
+        },
+        {
+          "component": "boolean",
+          "valueType": "boolean",
+          "name": "disabled",
+          "label": "Disabled",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
