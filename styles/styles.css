@@ -42,6 +42,12 @@
 
 /* fallback fonts */
 @font-face {
+  font-family: inter-fallback;
+  size-adjust: 107%;
+  src: local('Arial');
+}
+
+@font-face {
   font-family: roboto-condensed-fallback;
   size-adjust: 88.82%;
   src: local('Arial');
