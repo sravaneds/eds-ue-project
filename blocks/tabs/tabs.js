@@ -1,4 +1,4 @@
-import { createOptimizedPicture, toClassName } from '../../scripts/aem.js';
+import { toClassName } from '../../scripts/aem.js';
 
 const MOBILE = window.matchMedia('(max-width: 599px)');
 const DESKTOP = window.matchMedia('(min-width: 900px)');
@@ -7,105 +7,113 @@ const DEFAULT_INTERVAL = 6;
 const MIN_INTERVAL = 3;
 
 /**
+ * Cell order of a tab item, matching the "tabs-item" model in _tabs.json.
+ * The content cell groups the panel heading, image and rich text.
+ */
+const CELLS = [
+  'title', 'content', 'anchor', 'icon', 'badge',
+  'summary', 'thumbnail', 'active', 'disabled', 'analytics',
+];
+
+/**
  * Whether the page is rendered inside Universal Editor.
  * @returns {boolean}
  */
 const isEditor = () => !!document.querySelector('[data-aue-resource]');
 
 /**
- * Whether a section is a tab panel (section model "tab-panel").
- * @param {Element} el The element to check
- * @returns {boolean}
+ * Removes Universal Editor instrumentation from an element and its descendants,
+ * used for authored content that is moved into generated UI such as tab buttons.
+ * @param {Element} el The element
  */
-const isPanel = (el) => el?.matches('div.section')
-  && (el.dataset.tabTitle !== undefined || el.dataset.aueModel === 'tab-panel');
-
-/**
- * Collects the consecutive tab panel sections that follow the block's section.
- * @param {Element} block The tabs block
- * @returns {Element[]} The panel sections
- */
-function findPanels(block) {
-  const panels = [];
-  let next = block.closest('.section')?.nextElementSibling;
-  while (isPanel(next)) {
-    panels.push(next);
-    next = next.nextElementSibling;
-  }
-  return panels;
+function stripInstrumentation(el) {
+  [el, ...el.querySelectorAll('*')].forEach((node) => {
+    [...node.attributes]
+      .filter(({ name }) => name.startsWith('data-aue-') || name.startsWith('data-richtext-'))
+      .forEach(({ name }) => node.removeAttribute(name));
+  });
 }
 
 /**
- * Reads the authored rows of the block: heading, description and rotation speed.
+ * Splits the block rows into the block's own settings (single cell rows:
+ * heading, description, rotation speed) and the tab items.
  * @param {Element} block The tabs block
  */
 function readRows(block) {
-  const rows = { header: [], interval: DEFAULT_INTERVAL };
-  [...block.children].forEach((row, i, all) => {
+  const rows = { header: [], items: [], interval: DEFAULT_INTERVAL };
+  const settings = [];
+  [...block.children].forEach((row) => {
+    if (row.children.length > 1 || row.dataset.aueModel === 'tabs-item') rows.items.push(row);
+    else settings.push(row);
+  });
+  settings.forEach((row, i) => {
     const text = row.textContent.trim();
-    if (i === all.length - 1 && /^\d+(\.\d+)?$/.test(text)) {
+    if (i === settings.length - 1 && /^\d+(\.\d+)?$/.test(text)) {
       rows.interval = Math.max(MIN_INTERVAL, Number(text));
-      row.hidden = true;
-      row.classList.add('tabs-config');
+      row.remove();
     } else if (text) {
       row.classList.add(row.querySelector('h1, h2, h3, h4, h5, h6') ? 'tabs-heading' : 'tabs-description');
       rows.header.push(row);
     } else {
-      row.hidden = true;
+      row.remove();
     }
   });
   return rows;
 }
 
 /**
- * Reads the tab configuration from a panel's section metadata.
- * @param {Element} panel The panel section
- * @param {number} index Position of the panel
- * @param {Set<string>} usedIds Ids already taken by previous panels
+ * Turns an authored tab item row into a tab panel and returns its settings.
+ * @param {Element} row The tab item row
+ * @param {number} index Position of the tab
+ * @param {Set<string>} usedIds Ids already taken by previous tabs
  */
-function readTab(panel, index, usedIds) {
-  const data = panel.dataset;
-  const title = (data.tabTitle || '').trim() || `Tab ${index + 1}`;
-  const base = toClassName(data.tabId || title) || `tab-${index + 1}`;
+function readTab(row, index, usedIds) {
+  const cells = Object.fromEntries(CELLS.map((name, i) => [name, row.children[i]]));
+  const text = (name) => cells[name]?.textContent.trim() || '';
+
+  const title = text('title') || `Tab ${index + 1}`;
+  const base = toClassName(text('anchor') || title) || `tab-${index + 1}`;
   let id = base;
-  for (let n = 2; usedIds.has(id) || (document.getElementById(id) || panel) !== panel; n += 1) {
+  for (let n = 2; usedIds.has(id) || (document.getElementById(id) || row) !== row; n += 1) {
     id = `${base}-${n}`;
   }
   usedIds.add(id);
-  return {
-    panel,
+
+  const thumbnail = cells.thumbnail?.querySelector('picture') || cells.thumbnail?.querySelector('img');
+  if (thumbnail) {
+    stripInstrumentation(thumbnail);
+    thumbnail.querySelector('img')?.setAttribute('alt', '');
+    if (thumbnail.tagName === 'IMG') thumbnail.alt = '';
+  }
+
+  const tab = {
+    panel: row,
     id,
     title,
-    icon: toClassName(data.tabIcon || ''),
-    badge: (data.tabBadge || '').trim(),
-    description: (data.tabDescription || '').trim(),
-    thumbnail: data.tabThumbnail || '',
-    active: data.tabActive === 'true',
-    disabled: data.tabDisabled === 'true',
-    analytics: (data.tabAnalytics || '').trim(),
+    icon: toClassName(text('icon')),
+    badge: text('badge'),
+    description: text('summary'),
+    thumbnail,
+    active: text('active') === 'true',
+    disabled: text('disabled') === 'true',
+    analytics: text('analytics'),
   };
-}
 
-/**
- * Creates the picture for an image tab, optimized when served from this origin.
- * @param {string} src The image url
- * @returns {Element}
- */
-function createThumbnail(src) {
-  const url = new URL(src, window.location.href);
-  const picture = url.origin === window.location.origin
-    ? createOptimizedPicture(url.pathname, '', false, [{ width: '480' }])
-    : Object.assign(document.createElement('img'), { src, alt: '', loading: 'lazy' });
-  const wrapper = document.createElement('span');
-  wrapper.className = 'tabs-thumbnail';
-  wrapper.append(picture);
-  return wrapper;
+  // the row becomes the panel: keep only the content cell, which stays editable in the editor
+  const content = cells.content || document.createElement('div');
+  content.className = 'tabs-panel-content';
+  [...row.children].filter((cell) => cell !== content).forEach((cell) => cell.remove());
+  if (!content.parentElement) row.append(content);
+  row.className = 'tabs-panel';
+  row.id = id;
+  row.tabIndex = 0;
+  return tab;
 }
 
 /**
  * Creates the tab button for a panel.
  * @param {Element} block The tabs block
- * @param {object} tab The tab configuration
+ * @param {object} tab The tab settings
  * @returns {HTMLButtonElement}
  */
 function createTabButton(block, tab) {
@@ -118,7 +126,12 @@ function createTabButton(block, tab) {
   if (tab.disabled) button.setAttribute('aria-disabled', 'true');
   if (tab.analytics) button.dataset.analyticsId = tab.analytics;
 
-  if (block.classList.contains('image') && tab.thumbnail) button.append(createThumbnail(tab.thumbnail));
+  if (block.classList.contains('image') && tab.thumbnail) {
+    const wrapper = document.createElement('span');
+    wrapper.className = 'tabs-thumbnail';
+    wrapper.append(tab.thumbnail);
+    button.append(wrapper);
+  }
   if (tab.icon && (block.classList.contains('icons') || block.classList.contains('icon-tabs'))) {
     const icon = document.createElement('span');
     icon.className = 'tabs-icon';
@@ -153,7 +166,7 @@ function createTabButton(block, tab) {
 
 /**
  * Creates the accordion trigger used on mobile when the accordion behaviour is selected.
- * @param {object} tab The tab configuration
+ * @param {object} tab The tab settings
  * @param {string} level The heading tag name
  * @returns {HTMLElement}
  */
@@ -181,34 +194,22 @@ function createAccordionHeading(tab, level) {
 }
 
 /**
- * Decorates a tabs block. Tab panels are the tab panel sections that directly follow
- * the section containing this block, so each tab can hold any block.
+ * Decorates a tabs block. Each tab is a "Tab" item inside the block: its first
+ * cell is the tab title and its content cell (heading, image, rich text) is the panel.
  * @param {Element} block The tabs block
  */
 export default function decorate(block) {
   const editor = isEditor();
-  const { header: headerRows, interval } = readRows(block);
+  const { header: headerRows, items, interval } = readRows(block);
   const header = document.createElement('div');
   header.className = 'tabs-header';
   header.append(...headerRows);
-  block.prepend(header);
   if (!headerRows.length) header.hidden = true;
 
   const headingEl = header.querySelector('h1, h2, h3, h4, h5, h6');
   const headingLevel = headingEl ? Math.min(Number(headingEl.tagName[1]) + 1, 6) : 3;
   const accordionTag = `h${headingLevel}`;
   const accessibleName = headingEl?.textContent.trim() || 'Tabs';
-
-  // nested tabs would steal the sibling panels of the enclosing tabs
-  if (block.closest('.tabs-panels')) {
-    if (editor) {
-      const notice = document.createElement('p');
-      notice.className = 'tabs-notice';
-      notice.textContent = 'Tabs cannot be placed inside a tab panel.';
-      block.append(notice);
-    }
-    return;
-  }
 
   const nav = document.createElement('div');
   nav.className = 'tabs-nav';
@@ -223,8 +224,8 @@ export default function decorate(block) {
 
   const container = document.createElement('div');
   container.className = 'tabs-panels';
-  container.append(...findPanels(block));
-  block.append(nav, container);
+  container.append(...items);
+  block.prepend(header, nav, container);
 
   const deepLink = block.classList.contains('deeplink');
   const state = {
@@ -232,7 +233,6 @@ export default function decorate(block) {
     active: -1,
     mode: 'tabs',
     timer: null,
-    rotationStopped: false,
     hover: false,
   };
 
@@ -250,8 +250,7 @@ export default function decorate(block) {
     });
     // keep a focusable tab when nothing is selected (collapsed accordion)
     if (state.active < 0 && state.tabs.length) {
-      const first = state.tabs[enabledIndexes()[0] ?? 0];
-      first.button.tabIndex = 0;
+      state.tabs[enabledIndexes()[0] ?? 0].button.tabIndex = 0;
     }
     select.value = String(state.active);
   };
@@ -288,7 +287,7 @@ export default function decorate(block) {
       else if (right > list.right) offset = right - list.right;
       if (offset) tablist.scrollBy({ left: offset, behavior: REDUCED_MOTION.matches ? 'auto' : 'smooth' });
     }
-    if (deepLink && trigger !== 'rotation' && trigger !== 'init' && trigger !== 'hash') {
+    if (deepLink && !['rotation', 'init', 'hash', 'editor'].includes(trigger)) {
       window.history.replaceState(window.history.state, '', `#${tab.id}`);
     }
     if (changed && trigger !== 'init') notify(trigger);
@@ -305,12 +304,10 @@ export default function decorate(block) {
   const stopRotation = () => {
     clearInterval(state.timer);
     state.timer = null;
-    state.rotationStopped = true;
     setRotationLabel(false);
   };
   const startRotation = () => {
     clearInterval(state.timer);
-    state.rotationStopped = false;
     setRotationLabel(true);
     state.timer = setInterval(() => {
       if (state.hover || document.hidden || state.mode !== 'tabs') return;
@@ -346,10 +343,9 @@ export default function decorate(block) {
         panel.removeAttribute('aria-labelledby');
         panel.setAttribute('aria-label', tab.title);
       } else {
-        panel.removeAttribute('aria-label');
         // name the panel by the tab title only, without description or badge
-        const labelId = `tab-${state.mode === 'tabs' ? '' : 'accordion-'}label-${tab.id}`;
-        panel.setAttribute('aria-labelledby', labelId);
+        panel.removeAttribute('aria-label');
+        panel.setAttribute('aria-labelledby', `tab-${state.mode === 'tabs' ? '' : 'accordion-'}label-${tab.id}`);
       }
     });
     // tabs always show a panel, the accordion may be fully collapsed
@@ -367,50 +363,36 @@ export default function decorate(block) {
     return state.tabs.findIndex((tab) => tab.panel === target || tab.panel.contains(target));
   };
 
-  const build = () => {
-    const activeId = state.tabs[state.active]?.id;
-    state.tabs.forEach((tab) => tab.trigger.remove());
-    tablist.replaceChildren();
-    select.replaceChildren();
+  // build tabs from the items
+  const usedIds = new Set();
+  state.tabs = items.map((row, i) => {
+    const tab = readTab(row, i, usedIds);
+    tab.button = createTabButton(block, tab);
+    tab.trigger = createAccordionHeading(tab, accordionTag);
+    tablist.append(tab.button);
+    row.before(tab.trigger);
+    const option = new Option(tab.title, String(i));
+    option.disabled = tab.disabled;
+    select.append(option);
+    return tab;
+  });
 
-    const usedIds = new Set();
-    const panels = [...container.children].filter(isPanel);
-    state.tabs = panels.map((panel, i) => {
-      const tab = readTab(panel, i, usedIds);
-      panel.id = tab.id;
-      panel.classList.add('tabs-panel');
-      panel.tabIndex = 0;
-      tab.button = createTabButton(block, tab);
-      tab.trigger = createAccordionHeading(tab, accordionTag);
-      tablist.append(tab.button);
-      panel.before(tab.trigger);
-      const option = new Option(tab.title, String(i));
-      option.disabled = tab.disabled;
-      select.append(option);
-      return tab;
-    });
-
-    block.classList.toggle('tabs-empty', !state.tabs.length);
-    block.querySelector('.tabs-notice')?.remove();
-    if (!state.tabs.length) {
-      if (editor) {
-        const notice = document.createElement('p');
-        notice.className = 'tabs-notice';
-        notice.textContent = 'No tabs yet. In the Content Tree, select Main, click Add (+) → Tab Panel, then drag it directly below this section.';
-        block.append(notice);
-      }
-      return;
+  block.classList.toggle('tabs-empty', !state.tabs.length);
+  if (!state.tabs.length) {
+    if (editor) {
+      const notice = document.createElement('p');
+      notice.className = 'tabs-notice';
+      notice.textContent = 'No tabs yet. Select this Tabs block and click Add (+) → Tab to add a tab.';
+      block.append(notice);
     }
+    return;
+  }
 
-    const enabled = enabledIndexes();
-    const byId = state.tabs.findIndex((tab) => tab.id === activeId && !tab.disabled);
-    const byHash = targetIndex(window.location.hash);
-    const byDefault = state.tabs.findIndex((tab) => tab.active && !tab.disabled);
-    const preferred = [byId, byHash, byDefault].find((i) => i >= 0 && !state.tabs[i].disabled);
-    state.active = -1;
-    applyMode();
-    activate(preferred ?? enabled[0] ?? -1, { trigger: 'init' });
-  };
+  const byHash = targetIndex(window.location.hash);
+  const byDefault = state.tabs.findIndex((tab) => tab.active && !tab.disabled);
+  const preferred = [byHash, byDefault].find((i) => i >= 0 && !state.tabs[i].disabled);
+  applyMode();
+  activate(preferred ?? enabledIndexes()[0] ?? -1, { trigger: 'init' });
 
   // events
   tablist.addEventListener('click', (e) => {
@@ -459,11 +441,10 @@ export default function decorate(block) {
   MOBILE.addEventListener('change', applyMode);
   DESKTOP.addEventListener('change', applyMode);
 
-  build();
   if (rotationAllowed && state.tabs.length > 1) startRotation();
 
   if (editor) {
-    // show the panel of the component selected in the content tree
+    // show the tab of the item selected in the content tree
     document.addEventListener('aue:ui-select', (e) => {
       const { resource, selected } = e.detail || {};
       if (!selected || !resource) return;
@@ -471,15 +452,5 @@ export default function decorate(block) {
       const index = state.tabs.findIndex((tab) => tab.panel.contains(element));
       if (index >= 0 && index !== state.active) activate(index, { trigger: 'editor' });
     });
-    // panels are re-rendered in place when authors edit them, rebuild the tabs to match
-    let pending;
-    const isSection = (node) => node.nodeType === Node.ELEMENT_NODE && node.matches('div.section');
-    new MutationObserver((records) => {
-      const sectionsChanged = records
-        .some((r) => [...r.addedNodes, ...r.removedNodes].some(isSection));
-      if (!sectionsChanged) return;
-      cancelAnimationFrame(pending);
-      pending = requestAnimationFrame(build);
-    }).observe(container, { childList: true });
   }
 }

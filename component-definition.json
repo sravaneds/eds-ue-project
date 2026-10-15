@@ -75,23 +75,6 @@
               }
             }
           }
-        },
-        {
-          "title": "Tab Panel",
-          "id": "tab-panel",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "core/franklin/components/section/v1/section",
-                "template": {
-                  "name": "Tab Panel",
-                  "model": "tab-panel",
-                  "filter": "section",
-                  "tab-title": "New Tab"
-                }
-              }
-            }
-          }
         }
       ]
     },
@@ -184,6 +167,7 @@
                 "template": {
                   "name": "Tabs",
                   "model": "tabs",
+                  "filter": "tabs",
                   "classes": "standard",
                   "classes_orientation": "horizontal",
                   "classes_alignment": "align-start",
@@ -191,6 +175,23 @@
                   "classes_theme": "theme-light",
                   "classes_deeplink": true,
                   "interval": 6
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Tab",
+          "id": "tabs-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Tab",
+                  "model": "tabs-item",
+                  "title": "New Tab",
+                  "content_headingType": "h3"
                 }
               }
             }

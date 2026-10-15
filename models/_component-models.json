@@ -18,9 +18,6 @@
     "...": "./_section.json#/models"
   },
   {
-    "...": "./_tab-panel.json#/models"
-  },
-  {
     "...": "../blocks/*/_*.json#/models"
   }
 ]
