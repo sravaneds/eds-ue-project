@@ -24,9 +24,6 @@
       "components": [
         {
           "...": "./_section.json#/definitions"
-        },
-        {
-          "...": "./_tab-panel.json#/definitions"
         }
       ]
     },

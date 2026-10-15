@@ -18,7 +18,8 @@ module.exports = {
     'import/extensions': ['error', { js: 'always' }], // require js file extensions in imports
     'linebreak-style': ['error', 'unix'], // enforce unix linebreaks
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
-    // tab-panel is a section model, rendered as key-value section metadata rather than cells
-    'xwalk/max-cells': ['error', { '*': 4, 'tab-panel': 11 }],
+    // tabs-item: one cell per tab setting, so the block can read each setting by position
+    // even when optional ones are empty (grouped cells drop empty values)
+    'xwalk/max-cells': ['error', { '*': 4, 'tabs-item': 10 }],
   },
 };

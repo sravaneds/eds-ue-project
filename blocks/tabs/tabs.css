@@ -195,12 +195,50 @@
   display: none;
 }
 
-.tabs .tabs-panel > div + div {
-  margin-top: var(--tabs-panel-gap);
+/* panel content: heading, image and rich text of the tab item */
+.tabs .tabs-panel-content > :first-child {
+  margin-top: 0;
 }
 
-.tabs .tabs-panel > .default-content-wrapper > :first-child {
-  margin-top: 0;
+.tabs .tabs-panel-content > :last-child {
+  margin-bottom: 0;
+}
+
+.tabs .tabs-panel-content :is(h3, h4, h5) {
+  color: inherit;
+}
+
+.tabs .tabs-panel-content picture {
+  display: block;
+}
+
+.tabs .tabs-panel-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--tabs-radius);
+  object-fit: cover;
+}
+
+.tabs .tabs-panel-content > p:has(> picture) {
+  margin-block: 0 var(--tabs-panel-gap);
+}
+
+/* buttons stay visible on dark and brand themes */
+.tabs:is(.theme-dark, .theme-brand) .tabs-panel-content a.button:any-link {
+  border-color: var(--tabs-accent);
+  background-color: var(--tabs-accent);
+  color: var(--tabs-accent-text);
+}
+
+.tabs:is(.theme-dark, .theme-brand) .tabs-panel-content a.button.secondary:any-link {
+  background-color: transparent;
+  color: var(--tabs-text);
+}
+
+.tabs:is(.theme-dark, .theme-brand) .tabs-panel-content a:any-link:not(.button) {
+  color: var(--tabs-text);
+  text-decoration: underline;
 }
 
 .tabs .tabs-notice {
@@ -491,7 +529,7 @@
   background-color: var(--tabs-surface);
 }
 
-/* ===== mega: full-bleed panels that can host full width blocks ===== */
+/* ===== mega: full-bleed band with large tabs and a feature-style panel ===== */
 main > .section > .tabs-wrapper:has(> .tabs.mega) {
   max-width: none;
   padding: 0;
@@ -506,7 +544,7 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
 
 .tabs.mega > .tabs-header,
 .tabs.mega > .tabs-nav,
-.tabs.mega .tabs-panel > div,
+.tabs.mega .tabs-panel-content,
 .tabs.mega .tabs-accordion-heading {
   box-sizing: border-box;
   width: 100%;
@@ -515,9 +553,8 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
   padding-inline: var(--tabs-mega-padding);
 }
 
-.tabs.mega .tabs-panel > .hero-wrapper {
-  max-width: none;
-  padding-inline: 0;
+.tabs.mega .tabs-panel-content :is(h3, h4, h5) {
+  font-size: var(--heading-font-size-l);
 }
 
 /* focus */
@@ -593,6 +630,29 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
 
   .tabs.image .tabs-tab {
     width: 260px;
+  }
+
+  /* panels with an image: image beside the text */
+  .tabs .tabs-panel-content:has(> picture, > p > picture) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: dense;
+    column-gap: 48px;
+    align-items: center;
+  }
+
+  .tabs .tabs-panel-content:has(> picture, > p > picture) > * {
+    grid-column: 2;
+  }
+
+  .tabs .tabs-panel-content > :is(picture, p:has(> picture)) {
+    grid-column: 1;
+    grid-row: 1 / span 20;
+    margin: 0;
+  }
+
+  .tabs.vertical .tabs-panel-content:has(> picture, > p > picture) {
+    column-gap: 32px;
   }
 
   /* vertical: tab list beside the panels */

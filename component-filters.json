@@ -2,8 +2,7 @@
   {
     "id": "main",
     "components": [
-      "section",
-      "tab-panel"
+      "section"
     ]
   },
   {
@@ -39,6 +38,12 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "tabs",
+    "components": [
+      "tabs-item"
     ]
   }
 ]
