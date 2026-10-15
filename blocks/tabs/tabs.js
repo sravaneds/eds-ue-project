@@ -396,7 +396,7 @@ export default function decorate(block) {
       if (editor) {
         const notice = document.createElement('p');
         notice.className = 'tabs-notice';
-        notice.textContent = 'Add Tab Panel sections directly after this section to create tabs.';
+        notice.textContent = 'No tabs yet. In the Content Tree, select Main, click Add (+) → Tab Panel, then drag it directly below this section.';
         block.append(notice);
       }
       return;

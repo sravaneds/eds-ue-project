@@ -106,7 +106,7 @@ Rules to remember:
 5. Select the **page** (or main area) in the Content Tree, click **Add** (+) and choose **Sections → Tab Panel**. Place it directly after the section that contains the Tabs block.
 6. Repeat step 5 for each tab. Each new panel starts with the title "New Tab".
 
-> Until at least one Tab Panel follows it, the Tabs block shows a dashed hint in the editor: *"Add Tab Panel sections directly after this section to create tabs."* Visitors never see this hint.
+> Until at least one Tab Panel follows it, the Tabs block shows a dashed hint in the editor: *"No tabs yet. In the Content Tree, select Main, click Add (+) → Tab Panel, then drag it directly below this section."* Visitors never see this hint.
 
 ### 3.2 Set up each tab
 

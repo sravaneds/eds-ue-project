@@ -212,6 +212,12 @@
   font-size: var(--body-font-size-xs);
 }
 
+/* no panels yet: keep only the header and the editor hint */
+.tabs.tabs-empty .tabs-nav,
+.tabs.tabs-empty .tabs-panels {
+  display: none;
+}
+
 /* ===== auto rotation control ===== */
 .tabs .tabs-rotation {
   flex-shrink: 0;
