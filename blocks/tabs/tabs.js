@@ -1,18 +1,21 @@
-import { toClassName } from '../../scripts/aem.js';
+import { getMetadata, toClassName } from '../../scripts/aem.js';
+import { loadFragment } from '../fragment/fragment.js';
 
 const MOBILE = window.matchMedia('(max-width: 599px)');
 const DESKTOP = window.matchMedia('(min-width: 900px)');
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
 const DEFAULT_INTERVAL = 6;
 const MIN_INTERVAL = 3;
+let blockCount = 0;
 
 /**
- * Cell order of a tab item, matching the "tabs-item" model in _tabs.json.
- * The content cell groups the panel heading, image and rich text.
+ * Cell order of a Tab item, matching the "tabs-item" model in _tabs.json.
+ * "content" is the deprecated inline group (heading, image, rich text), kept so
+ * tabs authored before Tab Content fragments existed keep rendering.
  */
 const CELLS = [
-  'title', 'content', 'anchor', 'icon', 'badge',
-  'summary', 'thumbnail', 'active', 'disabled', 'analytics',
+  'title', 'fragment', 'anchor', 'icon', 'badge',
+  'summary', 'thumbnail', 'active', 'disabled', 'analytics', 'content',
 ];
 
 /**
@@ -35,8 +38,25 @@ function stripInstrumentation(el) {
 }
 
 /**
+ * Returns a same-origin path for a fragment reference, or an empty string.
+ * @param {Element} cell The fragment cell
+ * @returns {string}
+ */
+function readFragmentPath(cell) {
+  if (!cell) return '';
+  const raw = cell.querySelector('a')?.getAttribute('href') || cell.textContent.trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw, window.location.href);
+    return url.origin === window.location.origin ? url.pathname : '';
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Splits the block rows into the block's own settings (single cell rows:
- * heading, description, rotation speed) and the tab items.
+ * heading, description, rotation speed) and the Tab items.
  * @param {Element} block The tabs block
  */
 function readRows(block) {
@@ -62,8 +82,10 @@ function readRows(block) {
 }
 
 /**
- * Turns an authored tab item row into a tab panel and returns its settings.
- * @param {Element} row The tab item row
+ * Turns an authored Tab item row into a tab panel and returns its settings.
+ * The panel content is the Tab Content fragment (loaded later) or, for tabs
+ * authored before fragments, the legacy inline content.
+ * @param {Element} row The Tab item row
  * @param {number} index Position of the tab
  * @param {Set<string>} usedIds Ids already taken by previous tabs
  */
@@ -86,10 +108,29 @@ function readTab(row, index, usedIds) {
     if (thumbnail.tagName === 'IMG') thumbnail.alt = '';
   }
 
-  const tab = {
+  const fragment = readFragmentPath(cells.fragment);
+  const legacy = cells.content?.textContent.trim() || cells.content?.querySelector('picture') ? cells.content : null;
+
+  // the row becomes the panel; its instrumentation keeps the Tab selectable in the editor
+  const content = document.createElement('div');
+  content.className = 'tabs-panel-content';
+  if (!fragment && legacy) {
+    content.classList.add('tabs-legacy');
+    content.append(...legacy.childNodes);
+  }
+  row.replaceChildren(content);
+  row.className = 'tabs-panel';
+  row.id = id;
+  row.tabIndex = 0;
+
+  return {
     panel: row,
+    content,
     id,
+    index,
     title,
+    fragment,
+    loaded: !fragment,
     icon: toClassName(text('icon')),
     badge: text('badge'),
     description: text('summary'),
@@ -98,31 +139,24 @@ function readTab(row, index, usedIds) {
     disabled: text('disabled') === 'true',
     analytics: text('analytics'),
   };
-
-  // the row becomes the panel: keep only the content cell, which stays editable in the editor
-  const content = cells.content || document.createElement('div');
-  content.className = 'tabs-panel-content';
-  [...row.children].filter((cell) => cell !== content).forEach((cell) => cell.remove());
-  if (!content.parentElement) row.append(content);
-  row.className = 'tabs-panel';
-  row.id = id;
-  row.tabIndex = 0;
-  return tab;
 }
 
 /**
  * Creates the tab button for a panel.
  * @param {Element} block The tabs block
  * @param {object} tab The tab settings
+ * @param {number} count Number of tabs
  * @returns {HTMLButtonElement}
  */
-function createTabButton(block, tab) {
+function createTabButton(block, tab, count) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'tabs-tab';
   button.id = `tab-${tab.id}`;
   button.setAttribute('role', 'tab');
   button.setAttribute('aria-controls', tab.id);
+  button.setAttribute('aria-posinset', tab.index + 1);
+  button.setAttribute('aria-setsize', count);
   if (tab.disabled) button.setAttribute('aria-disabled', 'true');
   if (tab.analytics) button.dataset.analyticsId = tab.analytics;
 
@@ -194,11 +228,14 @@ function createAccordionHeading(tab, level) {
 }
 
 /**
- * Decorates a tabs block. Each tab is a "Tab" item inside the block: its first
- * cell is the tab title and its content cell (heading, image, rich text) is the panel.
+ * Decorates a tabs block. Each Tab item holds the tab settings and a Tab Content
+ * fragment; the fragment's sections (any project block) become the tab panel and are
+ * loaded when the tab is first opened.
  * @param {Element} block The tabs block
  */
-export default function decorate(block) {
+export default async function decorate(block) {
+  blockCount += 1;
+  const componentId = block.id || `tabs-${blockCount}`;
   const editor = isEditor();
   const { header: headerRows, items, interval } = readRows(block);
   const header = document.createElement('div');
@@ -222,23 +259,103 @@ export default function decorate(block) {
   select.setAttribute('aria-label', accessibleName);
   nav.append(tablist, select);
 
+  const status = document.createElement('p');
+  status.className = 'tabs-status';
+  status.setAttribute('aria-live', 'polite');
+
   const container = document.createElement('div');
   container.className = 'tabs-panels';
   container.append(...items);
   block.prepend(header, nav, container);
+  block.append(status);
 
   const deepLink = block.classList.contains('deeplink');
   const state = {
     tabs: [],
     active: -1,
+    default: -1,
     mode: 'tabs',
     timer: null,
     hover: false,
+    viewed: new Set(),
+    ready: false,
   };
 
   const enabledIndexes = () => state.tabs
     .map((tab, i) => (tab.disabled ? -1 : i))
     .filter((i) => i >= 0);
+
+  // analytics: DOM events plus the Adobe Client Data Layer when present
+  const track = (name, tab, extra = {}) => {
+    if (!tab) return;
+    const detail = {
+      event: `tabs:${name}`,
+      pageName: getMetadata('og:title') || document.title,
+      componentId,
+      tabId: tab.id,
+      tabName: tab.title,
+      tabPosition: tab.index + 1,
+      tabCount: state.tabs.length,
+      analyticsLabel: tab.analytics || tab.id,
+      timestamp: new Date().toISOString(),
+      ...extra,
+    };
+    block.dispatchEvent(new CustomEvent(detail.event, { bubbles: true, detail }));
+    if (Array.isArray(window.adobeDataLayer)) {
+      window.adobeDataLayer.push({ event: detail.event, eventInfo: detail });
+    }
+  };
+
+  const viewObserver = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const tab = state.tabs.find((t) => t.panel === entry.target);
+      if (tab && !tab.panel.hidden && !state.viewed.has(tab.id)) {
+        state.viewed.add(tab.id);
+        track('viewed', tab);
+      }
+    });
+  }, { threshold: 0.25 }) : null;
+
+  /**
+   * Loads a tab's fragment once. Blocks inside run their normal decoration
+   * and loading, exactly as they do anywhere else on a page.
+   */
+  const loadPanel = (tab) => {
+    if (tab.loaded) return Promise.resolve();
+    if (!tab.loading) {
+      tab.panel.setAttribute('aria-busy', 'true');
+      tab.loading = loadFragment(tab.fragment).then((fragment) => {
+        if (fragment) {
+          tab.content.replaceChildren(...fragment.childNodes);
+        } else if (editor) {
+          const notice = document.createElement('p');
+          notice.className = 'tabs-notice';
+          notice.textContent = `The Tab Content fragment "${tab.fragment}" could not be loaded.`;
+          tab.content.replaceChildren(notice);
+        }
+      }).catch(() => {}).finally(() => {
+        tab.loaded = true;
+        tab.panel.removeAttribute('aria-busy');
+        tab.panel.style.removeProperty('--tabs-panel-min-height');
+      });
+    }
+    return tab.loading;
+  };
+
+  const showPanel = async (tab, previous) => {
+    if (previous && previous !== tab) {
+      // keep the height of the outgoing panel while the new one loads (no layout shift)
+      tab.panel.style.setProperty('--tabs-panel-min-height', `${previous.panel.offsetHeight}px`);
+      previous.panel.querySelectorAll('video, audio').forEach((media) => media.pause());
+      previous.panel.dispatchEvent(new CustomEvent('tabs:panel-hidden', { bubbles: true, detail: { id: previous.id } }));
+    }
+    await loadPanel(tab);
+    if (state.tabs[state.active] !== tab) return;
+    tab.panel.dispatchEvent(new CustomEvent('tabs:panel-shown', { bubbles: true, detail: { id: tab.id } }));
+    // let blocks that measure their size (carousels, maps, embeds) recalculate
+    window.dispatchEvent(new Event('resize'));
+  };
 
   const render = () => {
     state.tabs.forEach((tab, i) => {
@@ -255,25 +372,10 @@ export default function decorate(block) {
     select.value = String(state.active);
   };
 
-  const notify = (trigger) => {
-    const tab = state.tabs[state.active];
-    if (!tab) return;
-    const detail = {
-      id: tab.id,
-      title: tab.title,
-      index: state.active,
-      analyticsId: tab.analytics || tab.id,
-      trigger,
-    };
-    block.dispatchEvent(new CustomEvent('tabs:change', { bubbles: true, detail }));
-    if (Array.isArray(window.adobeDataLayer)) {
-      window.adobeDataLayer.push({ event: 'tabs:change', eventInfo: detail });
-    }
-  };
-
   const activate = (index, { trigger = 'click', focus = false } = {}) => {
     const tab = state.tabs[index];
-    if (!tab || tab.disabled) return;
+    if (!tab || tab.disabled) return null;
+    const previous = state.tabs[state.active];
     const changed = index !== state.active;
     state.active = index;
     render();
@@ -287,10 +389,26 @@ export default function decorate(block) {
       else if (right > list.right) offset = right - list.right;
       if (offset) tablist.scrollBy({ left: offset, behavior: REDUCED_MOTION.matches ? 'auto' : 'smooth' });
     }
-    if (deepLink && !['rotation', 'init', 'hash', 'editor'].includes(trigger)) {
-      window.history.replaceState(window.history.state, '', `#${tab.id}`);
+    const userTriggers = ['click', 'keyboard', 'select', 'accordion'];
+    if (deepLink && userTriggers.includes(trigger) && window.location.hash !== `#${tab.id}`) {
+      // a history entry per user choice, so Back/Forward move between tabs
+      window.history.pushState({ tabs: componentId, tab: tab.id }, '', `#${tab.id}`);
     }
-    if (changed && trigger !== 'init') notify(trigger);
+    if (userTriggers.includes(trigger)) {
+      status.textContent = `${tab.title} tab selected, ${index + 1} of ${state.tabs.length}`;
+    }
+    track('activated', tab, { trigger });
+    if (changed && previous) {
+      track('changed', tab, { trigger, previousTabId: previous.id, previousTabName: previous.title });
+      // backwards compatible event name
+      block.dispatchEvent(new CustomEvent('tabs:change', {
+        bubbles: true,
+        detail: {
+          id: tab.id, title: tab.title, index, analyticsId: tab.analytics || tab.id, trigger,
+        },
+      }));
+    }
+    return showPanel(tab, previous);
   };
 
   // auto rotation
@@ -327,7 +445,7 @@ export default function decorate(block) {
   }
   const userActivate = (index, options) => {
     if (state.timer) stopRotation();
-    activate(index, options);
+    return activate(index, options);
   };
 
   const applyMode = () => {
@@ -349,7 +467,9 @@ export default function decorate(block) {
       }
     });
     // tabs always show a panel, the accordion may be fully collapsed
-    if (state.mode !== 'accordion' && state.active < 0) activate(enabledIndexes()[0], { trigger: 'init' });
+    if (state.ready && state.mode !== 'accordion' && state.active < 0) {
+      activate(state.default, { trigger: 'init' });
+    }
   };
 
   const targetIndex = (hash) => {
@@ -365,16 +485,22 @@ export default function decorate(block) {
 
   // build tabs from the items
   const usedIds = new Set();
-  state.tabs = items.map((row, i) => {
-    const tab = readTab(row, i, usedIds);
-    tab.button = createTabButton(block, tab);
+  state.tabs = items.map((row, i) => readTab(row, i, usedIds));
+  state.tabs.forEach((tab, i) => {
+    tab.button = createTabButton(block, tab, state.tabs.length);
     tab.trigger = createAccordionHeading(tab, accordionTag);
     tablist.append(tab.button);
-    row.before(tab.trigger);
+    tab.panel.before(tab.trigger);
     const option = new Option(tab.title, String(i));
     option.disabled = tab.disabled;
     select.append(option);
-    return tab;
+    if (editor && !tab.fragment && !tab.content.childNodes.length) {
+      const notice = document.createElement('p');
+      notice.className = 'tabs-notice';
+      notice.textContent = 'Select this Tab and choose a Tab Content fragment to add blocks to it.';
+      tab.content.append(notice);
+    }
+    viewObserver?.observe(tab.panel);
   });
 
   block.classList.toggle('tabs-empty', !state.tabs.length);
@@ -388,35 +514,61 @@ export default function decorate(block) {
     return;
   }
 
-  const byHash = targetIndex(window.location.hash);
   const byDefault = state.tabs.findIndex((tab) => tab.active && !tab.disabled);
-  const preferred = [byHash, byDefault].find((i) => i >= 0 && !state.tabs[i].disabled);
+  state.default = byDefault >= 0 ? byDefault : (enabledIndexes()[0] ?? -1);
+  const byHash = targetIndex(window.location.hash);
+  const initial = byHash >= 0 && !state.tabs[byHash].disabled ? byHash : state.default;
   applyMode();
-  activate(preferred ?? enabledIndexes()[0] ?? -1, { trigger: 'init' });
+  // the opening tab's content loads with the block; the others load when opened
+  await activate(initial, { trigger: initial === byHash ? 'hash' : 'init' });
+  state.ready = true;
 
-  // events
+  // events: arrows move focus (manual activation), Enter/Space/click select
   tablist.addEventListener('click', (e) => {
     const button = e.target.closest('[role="tab"]');
-    if (button) userActivate(state.tabs.findIndex((tab) => tab.button === button));
+    if (!button) return;
+    const index = state.tabs.findIndex((tab) => tab.button === button);
+    const tab = state.tabs[index];
+    track('clicked', tab, { disabled: tab.disabled });
+    if (tab.disabled) {
+      status.textContent = `${tab.title} tab is unavailable`;
+      return;
+    }
+    userActivate(index, { trigger: e.detail === 0 ? 'keyboard' : 'click' });
   });
 
   tablist.addEventListener('keydown', (e) => {
-    const enabled = enabledIndexes();
-    if (!enabled.length) return;
-    const current = state.tabs.findIndex((tab) => tab.button === document.activeElement);
-    const position = enabled.indexOf(current);
+    const buttons = state.tabs.map((tab) => tab.button);
+    const current = buttons.indexOf(document.activeElement);
+    if (current < 0) return;
     const rtl = getComputedStyle(block).direction === 'rtl';
     const forward = rtl ? 'ArrowLeft' : 'ArrowRight';
     const backward = rtl ? 'ArrowRight' : 'ArrowLeft';
     let next;
-    if (e.key === forward || e.key === 'ArrowDown') next = enabled[(position + 1) % enabled.length];
-    else if (e.key === backward || e.key === 'ArrowUp') {
-      next = enabled[(position - 1 + enabled.length) % enabled.length];
-    } else if (e.key === 'Home') [next] = enabled;
-    else if (e.key === 'End') next = enabled[enabled.length - 1];
+    if (e.key === forward || e.key === 'ArrowDown') next = (current + 1) % buttons.length;
+    else if (e.key === backward || e.key === 'ArrowUp') next = (current - 1 + buttons.length) % buttons.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = buttons.length - 1;
     else return;
     e.preventDefault();
-    userActivate(next, { trigger: 'keyboard', focus: true });
+    buttons.forEach((button, i) => { button.tabIndex = i === next ? 0 : -1; });
+    buttons[next].focus();
+  });
+
+  // when focus leaves the tab list, Tab returns to the selected tab next time
+  tablist.addEventListener('focusout', (e) => {
+    if (tablist.contains(e.relatedTarget)) return;
+    render();
+  });
+
+  // warm up a tab's fragment when the visitor is about to open it
+  tablist.addEventListener('pointerover', (e) => {
+    const button = e.target.closest('[role="tab"]');
+    const tab = state.tabs.find((t) => t.button === button);
+    if (tab?.fragment && !tab.loaded && !tab.prefetched) {
+      tab.prefetched = true;
+      fetch(`${tab.fragment.replace(/(\.plain)?\.html$/, '')}.plain.html`).catch(() => {});
+    }
   });
 
   container.addEventListener('click', (e) => {
@@ -427,15 +579,19 @@ export default function decorate(block) {
       state.active = -1;
       render();
     } else {
-      userActivate(index);
+      userActivate(index, { trigger: 'accordion' });
     }
   });
 
   select.addEventListener('change', () => userActivate(Number(select.value), { trigger: 'select' }));
 
+  // Back/Forward and in-page links: follow the hash, or return to the default tab
   window.addEventListener('hashchange', () => {
     const index = targetIndex(window.location.hash);
-    if (index >= 0) activate(index, { trigger: 'hash' });
+    if (index >= 0) activate(index, { trigger: 'history' });
+    else if (deepLink && !window.location.hash && state.active !== state.default) {
+      activate(state.default, { trigger: 'history' });
+    }
   });
 
   MOBILE.addEventListener('change', applyMode);

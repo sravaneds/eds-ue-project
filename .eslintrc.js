@@ -18,8 +18,8 @@ module.exports = {
     'import/extensions': ['error', { js: 'always' }], // require js file extensions in imports
     'linebreak-style': ['error', 'unix'], // enforce unix linebreaks
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
-    // tabs-item: one cell per tab setting, so the block can read each setting by position
+    // tabs-item: one cell per tab setting (plus the legacy content group), read by position
     // even when optional ones are empty (grouped cells drop empty values)
-    'xwalk/max-cells': ['error', { '*': 4, 'tabs-item': 10 }],
+    'xwalk/max-cells': ['error', { '*': 4, 'tabs-item': 11 }],
   },
 };

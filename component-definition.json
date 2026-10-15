@@ -190,8 +190,7 @@
                 "template": {
                   "name": "Tab",
                   "model": "tabs-item",
-                  "title": "New Tab",
-                  "content_headingType": "h3"
+                  "title": "New Tab"
                 }
               }
             }

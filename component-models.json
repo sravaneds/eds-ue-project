@@ -420,7 +420,7 @@
             "value": "align-end"
           },
           {
-            "name": "Stretch",
+            "name": "Full width (stretch)",
             "value": "align-stretch"
           }
         ]
@@ -464,6 +464,23 @@
           {
             "name": "Brand",
             "value": "theme-brand"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "classes_size",
+        "label": "Tab Size",
+        "valueType": "string",
+        "value": "size-default",
+        "options": [
+          {
+            "name": "Default",
+            "value": "size-default"
+          },
+          {
+            "name": "Compact",
+            "value": "compact"
           }
         ]
       },
@@ -524,6 +541,11 @@
     "id": "tabs-item",
     "fields": [
       {
+        "component": "tab",
+        "name": "tabSettings",
+        "label": "Tab"
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "title",
@@ -534,52 +556,11 @@
         }
       },
       {
-        "component": "text",
+        "component": "aem-content",
         "valueType": "string",
-        "name": "content_heading",
-        "label": "Panel Heading"
-      },
-      {
-        "component": "select",
-        "valueType": "string",
-        "name": "content_headingType",
-        "label": "Panel Heading Type",
-        "value": "h3",
-        "options": [
-          {
-            "name": "H3",
-            "value": "h3"
-          },
-          {
-            "name": "H4",
-            "value": "h4"
-          },
-          {
-            "name": "H5",
-            "value": "h5"
-          }
-        ]
-      },
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "content_image",
-        "label": "Panel Image",
-        "multi": false
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "content_imageAlt",
-        "label": "Panel Image Alt Text"
-      },
-      {
-        "component": "richtext",
-        "valueType": "string",
-        "name": "content_richtext",
-        "label": "Panel Content",
-        "description": "Text, lists, links and buttons shown in the tab",
-        "value": ""
+        "name": "fragment",
+        "label": "Tab Content (fragment)",
+        "description": "Fragment page holding this tab's blocks (Hero, Cards, Columns, any project block). Loaded when the tab opens."
       },
       {
         "component": "text",
@@ -646,8 +627,65 @@
         "component": "text",
         "valueType": "string",
         "name": "analytics",
-        "label": "Analytics Identifier",
+        "label": "Analytics Label",
         "description": "Sent with the tab change event for analytics"
+      },
+      {
+        "component": "tab",
+        "name": "tabLegacy",
+        "label": "Legacy content"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "content_heading",
+        "label": "Panel Heading",
+        "description": "Deprecated: shown only when no Tab Content fragment is set. Move this content into a fragment."
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "content_headingType",
+        "label": "Panel Heading Type",
+        "value": "h3",
+        "options": [
+          {
+            "name": "H3",
+            "value": "h3"
+          },
+          {
+            "name": "H4",
+            "value": "h4"
+          },
+          {
+            "name": "H5",
+            "value": "h5"
+          }
+        ],
+        "description": "Deprecated: shown only when no Tab Content fragment is set. Move this content into a fragment."
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "content_image",
+        "label": "Panel Image",
+        "multi": false,
+        "description": "Deprecated: shown only when no Tab Content fragment is set. Move this content into a fragment."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "content_imageAlt",
+        "label": "Panel Image Alt Text",
+        "description": "Deprecated: shown only when no Tab Content fragment is set. Move this content into a fragment."
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "content_richtext",
+        "label": "Panel Content",
+        "description": "Deprecated: shown only when no Tab Content fragment is set. Move this content into a fragment.",
+        "value": ""
       }
     ]
   }

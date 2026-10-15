@@ -195,24 +195,33 @@
   display: none;
 }
 
-/* panel content: heading, image and rich text of the tab item */
-.tabs .tabs-panel-content > :first-child {
+/* panel content: fragment sections (any blocks) or legacy inline content */
+.tabs .tabs-panel-content > .section + .section {
+  margin-top: var(--tabs-block-gap);
+}
+
+.tabs .tabs-panel-content > .section > div + div {
+  margin-top: var(--tabs-panel-gap);
+}
+
+.tabs .tabs-panel-content > .section > .default-content-wrapper > :first-child,
+.tabs .tabs-legacy > :first-child {
   margin-top: 0;
 }
 
-.tabs .tabs-panel-content > :last-child {
+.tabs .tabs-legacy > :last-child {
   margin-bottom: 0;
 }
 
-.tabs .tabs-panel-content :is(h3, h4, h5) {
+.tabs .tabs-legacy :is(h3, h4, h5) {
   color: inherit;
 }
 
-.tabs .tabs-panel-content picture {
+.tabs .tabs-legacy picture {
   display: block;
 }
 
-.tabs .tabs-panel-content img {
+.tabs .tabs-legacy img {
   display: block;
   width: 100%;
   height: auto;
@@ -220,23 +229,48 @@
   object-fit: cover;
 }
 
-.tabs .tabs-panel-content > p:has(> picture) {
+.tabs .tabs-legacy > p:has(> picture) {
   margin-block: 0 var(--tabs-panel-gap);
 }
 
-/* buttons stay visible on dark and brand themes */
-.tabs:is(.theme-dark, .theme-brand) .tabs-panel-content a.button:any-link {
+/* loading state while a tab's fragment is fetched (min-height avoids layout shift) */
+.tabs .tabs-panel[aria-busy="true"] {
+  min-height: var(--tabs-panel-min-height, 120px);
+  background: linear-gradient(90deg, var(--tabs-surface-alt) 25%, transparent 50%, var(--tabs-surface-alt) 75%) 0 0 / 200% 100%;
+  border-radius: var(--tabs-radius);
+  animation: tabs-loading 1.2s linear infinite;
+}
+
+@keyframes tabs-loading {
+  to { background-position: -200% 0; }
+}
+
+/* screen reader status announcements */
+.tabs .tabs-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* buttons and links in default content stay visible on dark and brand themes */
+.tabs:is(.theme-dark, .theme-brand) :is(.default-content-wrapper, .tabs-legacy) a.button:any-link {
   border-color: var(--tabs-accent);
   background-color: var(--tabs-accent);
   color: var(--tabs-accent-text);
 }
 
-.tabs:is(.theme-dark, .theme-brand) .tabs-panel-content a.button.secondary:any-link {
+.tabs:is(.theme-dark, .theme-brand) :is(.default-content-wrapper, .tabs-legacy) a.button.secondary:any-link {
   background-color: transparent;
   color: var(--tabs-text);
 }
 
-.tabs:is(.theme-dark, .theme-brand) .tabs-panel-content a:any-link:not(.button) {
+.tabs:is(.theme-dark, .theme-brand) :is(.default-content-wrapper, .tabs-legacy) a:any-link:not(.button) {
   color: var(--tabs-text);
   text-decoration: underline;
 }
@@ -332,6 +366,18 @@
 .tabs .tabs-accordion-trigger[aria-disabled="true"] {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ===== size ===== */
+.tabs.compact {
+  --tabs-tab-padding: 6px 12px;
+  --tabs-tab-min-height: 36px;
+  --tabs-icon-size: 16px;
+  --tabs-block-gap: 16px;
+}
+
+.tabs.compact .tabs-tab {
+  font-size: var(--body-font-size-xs);
 }
 
 /* ===== styles ===== */
@@ -544,7 +590,8 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
 
 .tabs.mega > .tabs-header,
 .tabs.mega > .tabs-nav,
-.tabs.mega .tabs-panel-content,
+.tabs.mega .tabs-legacy,
+.tabs.mega .tabs-panel-content > .section > div,
 .tabs.mega .tabs-accordion-heading {
   box-sizing: border-box;
   width: 100%;
@@ -553,7 +600,13 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
   padding-inline: var(--tabs-mega-padding);
 }
 
-.tabs.mega .tabs-panel-content :is(h3, h4, h5) {
+/* full-bleed blocks (hero) keep their full width inside mega panels */
+.tabs.mega .tabs-panel-content > .section > .hero-wrapper {
+  max-width: none;
+  padding-inline: 0;
+}
+
+.tabs.mega .tabs-legacy :is(h3, h4, h5) {
   font-size: var(--heading-font-size-l);
 }
 
@@ -594,6 +647,10 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .tabs .tabs-panel[aria-busy="true"] {
+    animation: none;
+  }
+
   .tabs .tabs-tab,
   .tabs .tabs-accordion-trigger::after {
     transition: none;
@@ -633,7 +690,7 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
   }
 
   /* panels with an image: image beside the text */
-  .tabs .tabs-panel-content:has(> picture, > p > picture) {
+  .tabs .tabs-legacy:has(> picture, > p > picture) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-flow: dense;
@@ -641,17 +698,17 @@ main > .section > .tabs-wrapper:has(> .tabs.mega) {
     align-items: center;
   }
 
-  .tabs .tabs-panel-content:has(> picture, > p > picture) > * {
+  .tabs .tabs-legacy:has(> picture, > p > picture) > * {
     grid-column: 2;
   }
 
-  .tabs .tabs-panel-content > :is(picture, p:has(> picture)) {
+  .tabs .tabs-legacy > :is(picture, p:has(> picture)) {
     grid-column: 1;
     grid-row: 1 / span 20;
     margin: 0;
   }
 
-  .tabs.vertical .tabs-panel-content:has(> picture, > p > picture) {
+  .tabs.vertical .tabs-legacy:has(> picture, > p > picture) {
     column-gap: 32px;
   }
 

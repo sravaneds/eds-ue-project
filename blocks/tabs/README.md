@@ -1,105 +1,155 @@
 # Tabs
 
-A container block for Universal Editor. Authors add **Tab** items inside the **Tabs** block. Each item holds the tab title, its settings and the panel content (heading, image, rich text). Everything is authored inside the block.
+A container block for Universal Editor. Tabs are managed entirely inside the Tabs block. Each **Tab** item holds its settings and a **Tab Content fragment**. The fragment is a page that can hold **any** project block (Hero, Cards, Columns, default content, and blocks added in the future), loaded into the tab when it opens.
 
-Edge Delivery does not allow blocks inside blocks ("No nested blocks for authors", David's Model), so a tab holds rich text, not other blocks. This follows the container-block pattern of Adobe's `aem-block-collection-xwalk` tabs and cards.
+## 1. Architecture overview
 
-## Files
+```
+Page section
+└── Tabs (block, container)                 ← heading, description, style, theme, behaviour
+    ├── Tab "Overview"  (item)               ← title, ID, icon, badge, description, thumbnail,
+    │     └── Tab Content → /fragments/products/overview     analytics label, default active, disabled
+    ├── Tab "Features"  (item)
+    │     └── Tab Content → /fragments/products/features
+    └── Tab "Resources" (item)
+          └── Tab Content → /fragments/products/resources
+
+/fragments/products/overview (fragment page, any blocks)
+├── Section
+│   ├── Hero
+│   └── Text, Title, Button
+└── Section
+    └── Cards …
+```
+
+**Why fragments, not blocks inside the Tab item.** Edge Delivery markup has no nested blocks: a block's children are rows and cells, and Universal Editor only allows item components inside a block. Adobe's content-modeling guidance is explicit ("Rule #2: No nested blocks for authors… consider fragments", David's Model on aem.live). A fragment is a normal page, so it accepts every block in the project's section filter. New blocks work in tabs with no change to this block, and the blocks render exactly as they do elsewhere.
+
+What this means for authors: tabs are added, removed, renamed, reordered, duplicated, disabled and defaulted inside the Tabs block. A tab's blocks are edited in its fragment page.
+
+## 2. Files
 
 ```
 blocks/tabs/
-├── _tabs.json      # Tabs + Tab definitions, models and the "tabs" filter (Universal Editor)
-├── tabs.js         # decoration: items → tab buttons and panels, ARIA, keyboard, deep links, rotation, mobile modes
-├── tabs.css        # tokens, styles, variations, responsive rules
-└── README.md       # this file (not served, *.md is in .hlxignore)
-icons/              # info.svg, star.svg, chat.svg sample tab icons
-drafts/             # tabs.plain.html sandbox covering every variation (not served)
-docs/tabs/          # authoring guide with screenshots (not served)
+├── _tabs.json   # definitions, models and filter (Tabs container + Tab item)
+├── tabs.js      # decoration, lazy fragment loading, lifecycle, a11y, analytics, history
+├── tabs.css     # tokens, styles, themes, sizes, responsive rules
+└── README.md    # this file (not served)
+blocks/fragment/fragment.js   # loadFragment(), reused to load and decorate tab content
+docs/tabs/                    # authoring guide (md / html / pdf) with screenshots (not served)
+drafts/                       # sandbox pages and fragments (not served)
 ```
 
-Registration: `tabs` is allowed in sections (`models/_section.json`), and the `tabs` filter allows only `tabs-item`. Run `npm run build:json` after changing models. Never hand-edit the generated `component-*.json` files.
+## 3. Universal Editor configuration and block registration
 
-## Content model
-
-### Tabs (`tabs`): block settings
-
-Rendered as single-cell rows before the items, plus block options (class names):
-
-| Field | Name | Type | Output |
-|---|---|---|---|
-| Heading | `title` + `titleType` | text + select (h2–h4) | row, heading |
-| Description | `description` | richtext | row |
-| Auto Rotation Speed | `interval` | number 3–30, shown only when rotation is on | row (last) |
-| Tab Style | `classes` | select | `standard` · `underline` · `pill` · `card` · `icon-tabs` · `numbered` · `image` · `mega` |
-| Orientation | `classes_orientation` | select | `horizontal` · `vertical` |
-| Alignment | `classes_alignment` | select | `align-start` · `align-center` · `align-end` · `align-stretch` |
-| Mobile Behaviour | `classes_mobile` | select | `mobile-scroll` · `mobile-accordion` · `mobile-dropdown` |
-| Theme Variant | `classes_theme` | select | `theme-light` · `theme-dark` · `theme-brand` |
-| Enable Icons / Deep Linking / Sticky / Auto Rotation | `classes_icons` · `classes_deeplink` · `classes_sticky` · `classes_autorotate` | boolean | `icons` · `deeplink` · `sticky` · `autorotate` |
-
-### Tab (`tabs-item`): one row per tab, one cell per setting
-
-| Cell | Name | Type |
+| Item | Where | Value |
 |---|---|---|
-| 1 | `title` | text, required: tab label |
-| 2 | `content` group: `content_heading` + `content_headingType`, `content_image` + `content_imageAlt`, `content_richtext` | panel content |
-| 3 | `anchor` | text, `^[a-z0-9-]*$`: deep link id (defaults to the title) |
-| 4 | `icon` | text: icon name in `/icons` |
-| 5 | `badge` | text ≤20 |
-| 6 | `summary` | text ≤160: tab description (Card, Image, Mega) |
-| 7 | `thumbnail` | reference: tab image (Image style, decorative) |
-| 8 | `active` | boolean: default active |
-| 9 | `disabled` | boolean |
-| 10 | `analytics` | text: analytics id |
+| Tabs definition | `_tabs.json` | `core/franklin/components/block/v1/block`, model `tabs`, filter `tabs` |
+| Tab definition | `_tabs.json` | `core/franklin/components/block/v1/block/item`, model `tabs-item`, template title "New Tab" |
+| Tabs filter | `_tabs.json` | `tabs` → `["tabs-item"]` (only Tabs can be added inside Tabs) |
+| Section filter | `models/_section.json` | includes `tabs` |
+| Lint | `.eslintrc.js` | `xwalk/max-cells` = 11 for `tabs-item` (one cell per setting, read by position) |
 
-Settings are separate cells, not a group, so the block can read each one by position even when optional ones are empty. `.eslintrc.js` raises `xwalk/max-cells` to 10 for `tabs-item` only.
+The generated `component-*.json` files are rebuilt with `npm run build:json`. Never edit them by hand. No Tab Panel section model exists anymore.
 
-## Decorated HTML
+## 4. Content models
 
-```html
-<div class="tabs standard … block" data-mode="tabs">
-  <div class="tabs-header"><div class="tabs-heading">…</div><div class="tabs-description">…</div></div>
-  <div class="tabs-nav">
-    <div class="tabs-list" role="tablist" aria-label="{heading}" aria-orientation="horizontal">
-      <button type="button" role="tab" id="tab-overview" aria-controls="overview" aria-selected="true" tabindex="0">
-        <span class="tabs-icon" aria-hidden="true"></span>
-        <span class="tabs-tab-text"><span class="tabs-tab-label" id="tab-label-overview">Overview</span>…</span>
-        <span class="tabs-badge">New</span>
-      </button>
-    </div>
-    <select class="tabs-select">…</select>                 <!-- dropdown mode -->
-    <button class="tabs-rotation" aria-label="…"></button>  <!-- auto rotation -->
-  </div>
-  <div class="tabs-panels">
-    <h3 class="tabs-accordion-heading"><button class="tabs-accordion-trigger" aria-expanded="true">…</button></h3>
-    <div class="tabs-panel" id="overview" role="tabpanel" aria-labelledby="tab-label-overview" tabindex="0">
-      <div class="tabs-panel-content">heading, image, rich text (stays editable in Universal Editor)</div>
-    </div>
-  </div>
-</div>
-```
+### Tabs (`tabs`)
 
-The item row itself becomes the panel, so its Universal Editor instrumentation is kept and the Tab stays selectable in the Content Tree. The settings cells are read and removed. The thumbnail is moved into the tab button with its instrumentation stripped.
+| Field | Name | Output |
+|---|---|---|
+| Heading / type | `title`, `titleType` (h2–h4) | row |
+| Description | `description` (richtext) | row |
+| Tab Style | `classes`: `standard` `underline` `pill` `card` `icon-tabs` `numbered` `image` `mega` | class |
+| Orientation | `classes_orientation`: `horizontal` `vertical` | class |
+| Alignment | `classes_alignment`: `align-start` `align-center` `align-end` `align-stretch` (full width) | class |
+| Mobile Behaviour | `classes_mobile`: `mobile-scroll` `mobile-accordion` `mobile-dropdown` | class |
+| Theme | `classes_theme`: `theme-light` `theme-dark` `theme-brand` | class |
+| Size | `classes_size`: `size-default` `compact` | class |
+| Toggles | `classes_icons`, `classes_deeplink` (default on), `classes_sticky`, `classes_autorotate` | class |
+| Auto Rotation Speed | `interval` (3–30 s, shown only when rotation is on) | row (last) |
 
-## JavaScript (`tabs.js`)
+### Tab (`tabs-item`), shown in two property tabs
 
-- `readRows`: single-cell rows are block settings (heading, description, rotation speed); multi-cell rows are tabs.
-- `readTab`: reads the cells by position, makes ids unique, and turns the row into the panel.
-- `applyMode`: switches between `tabs`, `accordion` and `dropdown` on viewport changes, with matching ARIA roles.
-- `activate`: one state update for all modes. It updates the hash when deep linking is on and dispatches `tabs:change` (`{ id, title, index, analyticsId, trigger }`), also pushed to `window.adobeDataLayer` when present.
-- Rotation pauses on hover and focus, has a pause/play button, stops on interaction, and is off in the editor and with reduced motion.
-- Editor support: `aue:ui-select` opens the tab containing the selected item. Universal Editor re-renders the whole block after edits, so no extra syncing is needed.
+**Tab** property tab (cells 1–10):
 
-## CSS (`tabs.css`)
+| # | Field | Name | Notes |
+|---|---|---|---|
+| 1 | Title | `title` | required, ≤60 |
+| 2 | Tab Content (fragment) | `fragment` | `aem-content`: the fragment page with the tab's blocks |
+| 3 | Tab ID | `anchor` | `^[a-z0-9-]*$`, deep link id; defaults to the title |
+| 4 | Icon | `icon` | icon name in `/icons` |
+| 5 | Badge | `badge` | ≤20 |
+| 6 | Description | `summary` | ≤160; Card, Image, Mega styles |
+| 7 | Thumbnail | `thumbnail` | reference; Image style (decorative) |
+| 8 | Default Active | `active` | boolean |
+| 9 | Disabled | `disabled` | boolean |
+| 10 | Analytics Label | `analytics` | sent with every tab event |
 
-Tokens (`--tabs-*`) → base tab list and tab → panels → rotation, accordion and select controls → one rule group per style → `[data-mode]` mobile rules → sticky and mega → focus and alignment → breakpoints at 600px and 900px. Panels with an image show it beside the text from 900px. Dark and brand themes restyle buttons and links in panels. All selectors are scoped to `.tabs`.
+**Legacy content** property tab (cell 11, deprecated): `content_heading`, `content_headingType`, `content_image`, `content_imageAlt` and `content_richtext`. These are only used when no Tab Content fragment is set.
 
-## Accessibility
+## 5. Rendering lifecycle
 
-WAI-ARIA tabs pattern with roving `tabindex`; arrow, Home and End keys (RTL aware, disabled tabs skipped); panels named by the tab title only; `aria-disabled` for disabled tabs; accordion and dropdown semantics on mobile; a pause control for rotation (WCAG 2.2.2); visible focus; 44px targets.
+1. `decorate()` reads the block rows: single-cell rows are block settings, multi-cell rows are Tabs.
+2. Each Tab row becomes its panel. Its cells are read by position and removed, and an empty `.tabs-panel-content` is added. The row keeps its Universal Editor instrumentation, so the Tab stays selectable in the Content Tree.
+3. Tab buttons, accordion triggers (mobile accordion) and dropdown options are built.
+4. The **opening tab** (from the URL hash, then Default Active, then the first enabled tab) is activated, and `decorate()` **awaits its fragment**. Its blocks load with the Tabs block, so its content can be the LCP element.
+5. **Other tabs are not fetched.** Their fragment loads the first time they open. `loadFragment()` fetches `<path>.plain.html` and runs `decorateMain()` + `loadSections()`, so nested blocks get their normal `decorate()`, CSS and JS. Hovering a tab warms the fetch cache.
+6. When a tab opens, the panel is marked `aria-busy` and keeps the outgoing panel's height while loading (no layout shift). After loading, the block dispatches `tabs:panel-shown` on the panel and a `resize` event on `window`, so carousels, maps and embeds can measure their visible size.
+7. When a tab closes, `<video>`/`<audio>` in it are paused and `tabs:panel-hidden` is dispatched on the panel. Blocks keep their state, so switching back is instant.
 
-## Extensibility
+Nested blocks initialise when their tab is first shown, which suits blocks that need real dimensions (carousels, video, maps, embeds, forms). Blocks that need to react to later show/hide can listen for `tabs:panel-shown` / `tabs:panel-hidden`.
 
-- **New tab style:** add an option to `classes` in `_tabs.json` and one scoped rule group in `tabs.css`.
-- **New tab setting:** add a field to the end of the `tabs-item` model and to the end of `CELLS` in `tabs.js`.
-- **Richer panel content:** add fields to the `content_` group in `tabs-item`. They render inside the panel automatically.
+## 6. Accessibility (WCAG 2.2 AA)
+
+- `role="tablist"` (named by the heading), `role="tab"` with `aria-selected`, `aria-controls`, `aria-posinset`/`aria-setsize`, and `role="tabpanel"` with `aria-labelledby` (the tab title only) and `tabindex="0"`.
+- **Manual activation**, recommended when panel content loads on demand: ←/→/↑/↓ move focus (RTL-aware, wrapping), Home/End jump, **Enter/Space** open the focused tab, and **Tab** moves into the panel. Focus returns to the selected tab when the visitor comes back to the tab list.
+- Disabled tabs use `aria-disabled`, stay focusable and are announced. Activating one announces "… tab is unavailable".
+- A polite live region announces "Features tab selected, 2 of 4" after each user selection.
+- Mobile accordion: buttons with `aria-expanded` inside headings, panels are `role="region"`. Mobile dropdown: a native `<select>` with an accessible name.
+- Loading panels set `aria-busy="true"`. Auto rotation has a pause/play button, pauses on hover and focus, and is off with reduced motion and in the editor. Focus rings are visible, targets are at least 44px (36px in Compact).
+
+## 7. Analytics
+
+Every event is dispatched on the block as a bubbling `CustomEvent` and, if `window.adobeDataLayer` exists, pushed as `{ event, eventInfo }`.
+
+| Event | When |
+|---|---|
+| `tabs:clicked` | A tab is clicked or activated by Enter/Space (includes `disabled`) |
+| `tabs:activated` | Any activation: `init`, `hash`, `click`, `keyboard`, `select`, `accordion`, `history`, `rotation`, `editor` |
+| `tabs:changed` | The active tab changed (includes `previousTabId`, `previousTabName`) |
+| `tabs:viewed` | A tab's panel is visible in the viewport (≥25%), once per tab per page view |
+| `tabs:change` | Legacy event name, kept for existing listeners |
+
+Payload: `pageName`, `componentId` (block id or `tabs-N`), `tabId`, `tabName`, `tabPosition`, `tabCount`, `analyticsLabel` (the Tab's Analytics Label, or its ID), `trigger`, `timestamp` (ISO 8601).
+
+## 8. Deep linking and history
+
+- With **Deep Linking** on, each user selection pushes `#tab-id` onto the history, so Back and Forward step through tabs. Going back past the first change returns to the default tab.
+- A URL with `#tab-id`, or with the id of any element inside a tab, opens that tab on load. In-page links do the same.
+- The active tab is kept in the URL, so reloads and shared links restore it.
+
+## 9. Themes, styles and sizes
+
+All existing variations are preserved: standard, underline, pill, card, icon, numbered, image, mega, vertical, sticky, auto rotation, alignment (including **full width** = Stretch), light/dark/brand themes, badges, icons, and the new **Compact** size. Theme overrides apply to the tab chrome and to default content inside panels only. Nested blocks keep their own styling. In Mega tabs, a Hero inside a panel spans the full width.
+
+## 10. Migration strategy
+
+| Content | Behaviour |
+|---|---|
+| Tabs with a **Tab Content** fragment | Fragment loads into the tab |
+| Tabs authored with the previous inline fields (heading, image, rich text) | Keep rendering from the **Legacy content** fields, unchanged, with no author action needed |
+| Pages that used the removed **Tab Panel** sections | Those sections render as normal sections. Recreate them as Tab items |
+
+To move a legacy tab to the new model (per tab):
+1. Create a fragment page (e.g. `/content/<site>/fragments/<page>/<tab>`) and add the content as **Title**, **Image** and **Text** (or any blocks).
+2. Set the Tab's **Tab Content (fragment)** to that page. The fragment takes over immediately.
+3. Clear the **Legacy content** fields. Once no content uses them, remove the `content_*` fields and the `content` entry in `CELLS`.
+
+Moving content automatically would mean creating and editing pages in AEM author, which this code can't do. Run it as a content migration in AEM if many pages are affected.
+
+## 11. Extensibility
+
+- **New blocks in tabs:** add them to the project as usual. Fragment pages use the section filter, so they appear in tab content automatically.
+- **New tab setting:** add a field at the end of the Tab property tab in `tabs-item` (before the legacy group), and add it at the same position in `CELLS`.
+- **New style:** add an option to `classes` and one scoped rule group in `tabs.css`.
+- **Block integration:** listen for `tabs:panel-shown` / `tabs:panel-hidden` on the closest `.tabs-panel`.
