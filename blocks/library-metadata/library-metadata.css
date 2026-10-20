@@ -1,0 +1,5 @@
+/* metadata for the block library only, never shown on the page */
+.library-metadata-wrapper,
+.library-metadata {
+  display: none;
+}

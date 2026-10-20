@@ -1,0 +1,30 @@
+{
+  "variantName": "list",
+  "baseBlock": "list",
+  "canonicalModel": "list",
+  "visualCharacteristics": {
+    "purpose": "content listing",
+    "density": "medium",
+    "imagePattern": "optional per card"
+  },
+  "contentPattern": {
+    "structure": "heading row + header link row + card rows (theme card: 6 cells; insight card: 9 cells)",
+    "themeCardCells": ["image", "eyebrow", "title", "description", "link", "surface"],
+    "insightCardCells": ["variant", "image", "tags", "readTime", "title", "description", "link", "format", "date"]
+  },
+  "options": [
+    { "class": "themes", "label": "Themes" },
+    { "class": "insights", "label": "Insights" }
+  ],
+  "memberVariantIds": [],
+  "reuseGuidance": {
+    "suitableFor": [
+      "theme or topic teasers (Themes)",
+      "featured insight followed by supporting articles, reports and case studies (Insights)"
+    ],
+    "notSuitableFor": [
+      "long text content",
+      "navigation menus"
+    ]
+  }
+}
