@@ -153,7 +153,8 @@ export async function decorateTabSections(main) {
  * @param {Element} main The main element
  */
 async function loadTemplate(main) {
-  const pageCategory = getMetadata('pagecategory');
+  // meta names are case-sensitive: the field is pageCategory, some sources lowercase it
+  const pageCategory = getMetadata('pageCategory') || getMetadata('pagecategory');
   const name = toClassName((pageCategory === 'article' ? 'article' : ''));
   if (!TEMPLATES.includes(name)) return;
   try {

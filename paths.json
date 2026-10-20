@@ -2,6 +2,9 @@
   "mappings": [
     "/content/eds-demo:/",
     "/content/eds-demo/configuration:/.helix/config.json",
-    "/content/eds-demo/metadata:/metadata.json"
+    "/content/eds-demo/metadata:/metadata.json",
+    "/content/eds-demo/placeholders:/placeholders.json",
+    "/content/eds-demo/taxonomy:/taxonomy.json",
+    "/content/eds-demo/data/offices:/data/offices.json"
   ]
 }
