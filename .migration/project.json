@@ -1,0 +1,16 @@
+{
+  "type": "xwalk",
+  "sites": {
+    "eds-ue-project": {
+      "libraryUrl": "https://main--sta-xwalk-boilerplate--aemysites.aem.page/tools/sidekick/library.json",
+      "previewOrg": "sravaneds",
+      "previewSite": "eds-ue-project",
+      "contentHostUrl": "author-p220207-e2271469.adobeaemcloud.com",
+      "aemSitePath": "/content/eds-demo",
+      "aemAssetsFolderPath": "/content/dam/eds-demo",
+      "aemSiteName": "eds-demo",
+      "aemSiteTitle": "EDS Demo",
+      "baseUrl": "https://main--eds-ue-project--sravaneds.aem.live"
+    }
+  }
+}

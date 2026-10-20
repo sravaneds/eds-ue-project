@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "url": "https://main--eds-ue-project--sravaneds.aem.page/home-page",
+  "path": "home-page",
+  "timestamp": "2026-10-15T15:55:07.975Z",
+  "title": "home-page",
+  "template": "home-page",
+  "blocks": [
+    "hero"
+  ]
+}

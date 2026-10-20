@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "projectType": "xwalk"
+  },
+  "templates": [
+    {
+      "name": "home-page",
+      "urls": [
+        "https://main--eds-ue-project--sravaneds.aem.page/home-page"
+      ],
+      "representativeUrl": "https://main--eds-ue-project--sravaneds.aem.page/home-page",
+      "description": "Home page: page-label paragraph followed by a hero banner",
+      "blocks": [
+        {
+          "name": "hero",
+          "instances": [
+            "main .hero-wrapper > .hero",
+            "main .hero.block"
+          ]
+        }
+      ],
+      "urlPattern": "/*",
+      "sections": [
+        {
+          "id": "rc1",
+          "name": "home-intro",
+          "selector": [
+            "main > .section.hero-container",
+            "main > .section"
+          ],
+          "style": null,
+          "blocks": [
+            "hero"
+          ],
+          "defaultContent": [
+            "main > .section > .default-content-wrapper"
+          ]
+        }
+      ]
+    }
+  ]
+}
