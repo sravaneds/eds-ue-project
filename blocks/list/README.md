@@ -7,7 +7,7 @@ A section heading, an optional header link, and a set of content cards. Built fr
 | **Themes** | Transformation themes `4308:42512` | 4 theme cards (2:3). Swipe row with progress indicator below 900px |
 | **Insights** | Insight & Opinion `4158:171743` | Featured card (full width), then supporting cards in 4 columns. 2 columns on small tablets, 1 on mobile |
 
-Design analysis, style guide and authoring matrix: [`docs/design/design-analysis.md`](../../docs/design/design-analysis.md).
+Design analysis, style guide and authoring matrix: [`docs/design/design-analysis.md`](../../docs/design/design-analysis.md). Author how-to: [`docs/list/list-authoring-guide.md`](../../docs/list/list-authoring-guide.md) (also as HTML and PDF).
 
 ## Universal Editor models
 

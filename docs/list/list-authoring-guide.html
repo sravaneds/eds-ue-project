@@ -1,0 +1,450 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>List Block: Authoring Guide</title><style>body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1f2328;max-width:900px;margin:40px auto;padding:0 24px;line-height:1.55;font-size:15px}
+h1{font-size:30px;border-bottom:2px solid #1d3ecf;padding-bottom:8px}
+h2{font-size:22px;margin-top:40px;border-bottom:1px solid #d0d7de;padding-bottom:6px;break-after:avoid}
+h3{font-size:18px;margin-top:28px;break-after:avoid}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px;break-inside:avoid}
+th,td{border:1px solid #d0d7de;padding:6px 10px;text-align:left;vertical-align:top}
+th{background:#f6f8fa}
+code{background:#f6f8fa;padding:1px 5px;border-radius:4px;font-size:13px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow:auto;font-size:12.5px;break-inside:avoid}
+pre code{background:none;padding:0}
+img{max-width:100%;border:1px solid #d0d7de;border-radius:6px;margin:8px 0;break-inside:avoid}
+p:has(> img){text-align:center}
+blockquote{margin:12px 0;padding:8px 14px;border-left:4px solid #1d3ecf;background:#f3f6ff;color:#333}
+hr{border:0;border-top:1px solid #d0d7de;margin:28px 0}
+a{color:#1d3ecf}</style></head><body><h1 id="list-authoring-guide">List: Authoring Guide</h1>
+<p><strong>Audience:</strong> content authors and reviewers in AEM Universal Editor. Developers: see <code>blocks/list/README.md</code> and <code>docs/design/design-analysis.md</code>.</p>
+<p><strong>About the screenshots:</strong> they show the block as rendered in the local preview. The Universal Editor interface itself (Content Tree, Add menu, properties panel) can't be captured from this environment, so those steps are described in text. Numbered orange badges in the anatomy screenshots were added for this guide; they don't appear on the page.</p>
+<p><strong>Status:</strong> tested in the local preview at desktop, tablet and mobile widths. Still to confirm in your AEM author environment: List, Theme card and Insight card appearing under Add, and editing titles directly on the canvas.</p>
+<hr>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-what-the-list-block-is">What the List block is</a></li>
+<li><a href="#2-add-a-list">Add a List</a></li>
+<li><a href="#3-list-settings">List settings</a></li>
+<li><a href="#4-themes-variation">Themes variation</a></li>
+<li><a href="#5-insights-variation">Insights variation</a></li>
+<li><a href="#6-reorder-duplicate-and-delete-cards">Reorder, duplicate and delete cards</a></li>
+<li><a href="#7-new-and-partly-filled-cards">New and partly filled cards</a></li>
+<li><a href="#8-tablet-and-mobile">Tablet and mobile</a></li>
+<li><a href="#9-accessibility-checklist">Accessibility checklist</a></li>
+<li><a href="#10-troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr>
+<h2 id="1-what-the-list-block-is">1. What the List block is</h2>
+<p>A <strong>List</strong> is a section heading, an optional link next to it, and a set of cards. It comes in two variations, taken from the Figma design:</p>
+<p><strong>Themes</strong>: a row of four theme cards.</p>
+<p><img src="images/themes-desktop.jpg" alt="Themes variation"></p>
+<p><strong>Insights</strong>: a large featured card followed by supporting cards (articles, reports, case studies).</p>
+<p><img src="images/insights-desktop.jpg" alt="Insights variation"></p>
+<pre><code>List                         ← the block: Variation, Heading, Header Link
+├── Theme card / Insight card
+├── Theme card / Insight card
+└── …
+</code></pre>
+<p>Every card is clickable as a whole. Visitors don't have to hit the small link.</p>
+<hr>
+<h2 id="2-add-a-list">2. Add a List</h2>
+<ol>
+<li>Open the page in <strong>Universal Editor</strong>.</li>
+<li>In the Content Tree, select the <strong>section</strong> where the List should go. Any section works, including a tab inside a <strong>Tabs</strong> container.</li>
+<li>Click <strong>Add (+)</strong> → <strong>List</strong>. It's added with the heading "Section heading" and no cards.</li>
+<li>With <strong>List</strong> selected, choose the <strong>Variation</strong> and type the <strong>Heading</strong> (see section 3).</li>
+<li>Select the List and click <strong>Add (+)</strong> → <strong>Theme card</strong> or <strong>Insight card</strong>, once per card.</li>
+</ol>
+<hr>
+<h2 id="3-list-settings">3. List settings</h2>
+<p>Select the <strong>List</strong> block and set:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variation</td>
+<td><strong>Themes</strong> or <strong>Insights</strong>. Defaults to Themes</td>
+</tr>
+<tr>
+<td>Heading</td>
+<td>Required, up to 80 characters, e.g. "The future in focus"</td>
+</tr>
+<tr>
+<td>Header Link</td>
+<td>Optional page or URL, e.g. the insights listing</td>
+</tr>
+<tr>
+<td>Header Link Text</td>
+<td>e.g. "Explore insights", up to 40 characters</td>
+</tr>
+</tbody>
+</table>
+<p>On desktop the header link is a rounded button to the right of the heading. On smaller screens it's a plain arrow link. Leave both header link fields empty to show only the heading.</p>
+<hr>
+<h2 id="4-themes-variation">4. Themes variation</h2>
+<p>Use <strong>Theme cards</strong> in a Themes list. The design shows four.</p>
+<h3 id="card-anatomy">Card anatomy</h3>
+<p><img src="images/anatomy-themes.jpg" alt="Theme card fields"></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Heading</td>
+<td>Set on the List (section 3)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Eyebrow</td>
+<td>Short label shown in capitals, e.g. "AI adoption" (up to 40 characters)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Title</td>
+<td>Required, up to 90 characters. About 50 fits the design best</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Description</td>
+<td>Optional, up to 180 characters</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Link + Link Text</td>
+<td>The whole card links here. Link Text defaults to "Explore"</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Card Colour: <strong>Dark</strong></td>
+<td>Used when the card has no background image</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Background Image (+ Alt Text)</td>
+<td>Turns the card into an image card with dark text</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Card Colour: <strong>Brand blue</strong></td>
+<td>The second colour in the design</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-three-looks">The three looks</h3>
+<table>
+<thead>
+<tr>
+<th>Dark</th>
+<th>Brand blue</th>
+<th>Image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="images/card-theme-dark.jpg" alt="Dark theme card"></td>
+<td><img src="images/card-theme-brand.jpg" alt="Brand theme card"></td>
+<td><img src="images/card-theme-image.jpg" alt="Image theme card"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Without an image</strong>, pick a <strong>Card Colour</strong>. The design alternates Dark and Brand blue.</li>
+<li><strong>With an image</strong>, the colour setting is ignored, the text turns dark, and the "Explore" link is hidden; the title becomes the link instead. Choose images with a calm, light area at the top so the text stays readable.</li>
+</ul>
+<hr>
+<h2 id="5-insights-variation">5. Insights variation</h2>
+<p>Use <strong>Insight cards</strong> in an Insights list. Set each card's <strong>Card Type</strong> first. It decides which fields are shown and how the card looks.</p>
+<h3 id="card-anatomy-1">Card anatomy</h3>
+<p><img src="images/anatomy-insights.jpg" alt="Insight card fields"></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Field</th>
+<th>Card types</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Heading</td>
+<td>–</td>
+<td>Set on the List</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Header Link + Text</td>
+<td>–</td>
+<td>Set on the List, e.g. "Explore insights"</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Card Type: <strong>Featured</strong></td>
+<td>Featured</td>
+<td>Full-width card, the image is the background</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Tags + Read Time</td>
+<td>Featured</td>
+<td>Tags are comma separated, e.g. "Banking, Core modernisation". Read Time e.g. "14m"</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Title</td>
+<td>Featured</td>
+<td>Required on every card type, up to 120 characters</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Image (+ Alt Text)</td>
+<td>Article, Case study, Featured</td>
+<td>Not shown on Report cards</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Tags + Read Time</td>
+<td>Article</td>
+<td>Shown above the title</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Title</td>
+<td>Article</td>
+<td>The title is the card's link</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Content Type + Date</td>
+<td>Article</td>
+<td>Footer line, e.g. "Perspective | 15th Oct 2026"</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Tags</td>
+<td>Report</td>
+<td>Shown as the label, e.g. "Report"</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Description</td>
+<td>Report</td>
+<td>Up to 180 characters</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Link Text</td>
+<td>Report</td>
+<td>Visible link, e.g. "Download" (defaults to "Read more")</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Card Type: <strong>Case study</strong></td>
+<td>Case study</td>
+<td>Square image</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Link</strong> (all types): the page the whole card opens. Only Report cards show the link text; on the others the title is the link.</p>
+<h3 id="card-types">Card types</h3>
+<p><strong>Featured</strong></p>
+<p><img src="images/card-insight-featured.jpg" alt="Featured card"></p>
+<table>
+<thead>
+<tr>
+<th>Article</th>
+<th>Report</th>
+<th>Case study</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="images/card-insight-article.jpg" alt="Article card"></td>
+<td><img src="images/card-insight-report.jpg" alt="Report card"></td>
+<td><img src="images/card-insight-case-study.jpg" alt="Case study card"></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Card Type</th>
+<th>Use for</th>
+<th>Fill in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Featured</strong></td>
+<td>The lead story</td>
+<td>Image, Tags, Read Time, Title, Link</td>
+</tr>
+<tr>
+<td><strong>Article</strong></td>
+<td>Blogs, perspectives</td>
+<td>Image, Tags, Read Time, Title, Link, Content Type, Date</td>
+</tr>
+<tr>
+<td><strong>Report</strong></td>
+<td>Downloads, reports</td>
+<td>Tags (e.g. "Report"), Title, Description, Link, Link Text</td>
+</tr>
+<tr>
+<td><strong>Case study</strong></td>
+<td>Client stories</td>
+<td>Image, Tags (e.g. "Verizon, Streaming"), Title, Link</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommended layout</strong> (as in the design): one <strong>Featured</strong> card first, then four supporting cards. A Featured card always takes a full row; supporting cards sit four per row on desktop and wrap to a new row after four.</p>
+<p>Write dates exactly as they should appear, e.g. "15th Oct 2026". They're shown as typed.</p>
+<hr>
+<h2 id="6-reorder-duplicate-and-delete-cards">6. Reorder, duplicate and delete cards</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Do this</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reorder</strong> cards</td>
+<td>Drag the card in the Content Tree</td>
+</tr>
+<tr>
+<td><strong>Duplicate</strong> a card</td>
+<td>Duplicate it in the Content Tree, then change its text and image</td>
+</tr>
+<tr>
+<td><strong>Delete</strong> a card</td>
+<td>Select it and delete it</td>
+</tr>
+<tr>
+<td><strong>Switch</strong> Themes ↔ Insights</td>
+<td>Change <strong>Variation</strong> on the List. Then replace the cards with the matching card type (Theme cards for Themes, Insight cards for Insights)</td>
+</tr>
+<tr>
+<td><strong>Turn</strong> an Article into a Report</td>
+<td>Change <strong>Card Type</strong>, then fill in Description and Link Text</td>
+</tr>
+</tbody>
+</table>
+<p>In the editor, clicking a card selects it for editing (the whole-card link only works on the published page). Edit a card's fields in the properties panel. Text such as titles can also be edited on the canvas.</p>
+<hr>
+<h2 id="7-new-and-partly-filled-cards">7. New and partly filled cards</h2>
+<p>New cards start with the title "Card title". Empty fields are simply left out, so a card never shows empty boxes or placeholder text.</p>
+<p><strong>Themes</strong>: a new Dark card, a new Brand blue card, and a card with a link but no link text ("Explore" is used):</p>
+<p><img src="images/states-themes.jpg" alt="New and partly filled theme cards"></p>
+<p><strong>Insights</strong>: a new Article card, an Article without an image, and a Report with a link but no link text ("Read more" is used):</p>
+<p><img src="images/states-insights.jpg" alt="New and partly filled insight cards"></p>
+<hr>
+<h2 id="8-tablet-and-mobile">8. Tablet and mobile</h2>
+<p>Nothing needs to be set for smaller screens. The List adapts on its own.</p>
+<p><strong>Tablet</strong> (landscape, as in the design): both variations keep four cards per row. Cards grow taller to fit their text. On narrower tablets (portrait), Themes cards swipe as on mobile and Insights cards sit two per row.</p>
+<p><img src="images/tablet-themes.jpg" alt="Themes on tablet"></p>
+<p><img src="images/tablet-insights.jpg" alt="Insights on tablet"></p>
+<p><strong>Mobile, Themes</strong>: the cards become a swipeable row. The bar below shows how far the visitor has swiped.</p>
+<table>
+<thead>
+<tr>
+<th>Start</th>
+<th>After swiping</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="images/mobile-themes.jpg" alt="Themes on mobile"></td>
+<td><img src="images/mobile-themes-swiped.jpg" alt="Themes on mobile after swiping"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mobile, Insights</strong>: cards stack in one column, and the header link moves below the heading.</p>
+<table>
+<thead>
+<tr>
+<th>Top</th>
+<th>Continued</th>
+<th>End</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="images/mobile-insights-1.jpg" alt="Insights on mobile: heading, featured card and first article"></td>
+<td><img src="images/mobile-insights-2.jpg" alt="Insights on mobile: report and second article"></td>
+<td><img src="images/mobile-insights-3.jpg" alt="Insights on mobile: case study"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="9-accessibility-checklist">9. Accessibility checklist</h2>
+<p>Built in:</p>
+<ul>
+<li>The heading is announced as a heading, and each card title as a sub-heading.</li>
+<li>Cards are announced as a list ("list, 4 items").</li>
+<li>"Explore" and "Download" links are read together with the card title, so they make sense on their own.</li>
+<li>The "|" dividers are skipped by screen readers. Read time is announced as "Read time 14m".</li>
+<li>Keyboard users can tab through every card, with a visible blue outline around the whole card:</li>
+</ul>
+<p><img src="images/focus-card.jpg" alt="Keyboard focus on a card"></p>
+<p>Authors should:</p>
+<ul>
+<li>Write a short, unique <strong>Heading</strong> and <strong>Title</strong> for every card.</li>
+<li>Add <strong>Alt Text</strong> for images that carry meaning (e.g. a product screen). Leave it empty for decorative images.</li>
+<li>Use images with a light, calm area behind the text on image cards and Featured cards.</li>
+<li>Write link text that says what happens, e.g. "Download" for a PDF report.</li>
+</ul>
+<hr>
+<h2 id="10-troubleshooting">10. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>List</strong> isn't in the Add menu</td>
+<td>Select a <strong>section</strong> (not the page or another block) and click <strong>Add (+)</strong> again. If it's still missing, reload the editor</td>
+</tr>
+<tr>
+<td><strong>Theme card</strong> / <strong>Insight card</strong> isn't offered</td>
+<td>Select the <strong>List</strong> block itself, then <strong>Add (+)</strong></td>
+</tr>
+<tr>
+<td>Cards look wrong for the variation</td>
+<td>Theme cards belong in <strong>Themes</strong>, Insight cards in <strong>Insights</strong>. Check the List's <strong>Variation</strong></td>
+</tr>
+<tr>
+<td>The "Explore" link doesn't show</td>
+<td>The card has a background image, so the title is the link. That's by design</td>
+</tr>
+<tr>
+<td>The image doesn't show on a card</td>
+<td>Report cards never show an image. Change <strong>Card Type</strong> to Article or Case study</td>
+</tr>
+<tr>
+<td>A featured card isn't full width</td>
+<td>Set its <strong>Card Type</strong> to <strong>Featured</strong></td>
+</tr>
+<tr>
+<td>Tags run together in one label</td>
+<td>Separate tags with commas: "Banking, Core modernisation"</td>
+</tr>
+<tr>
+<td>Text is hard to read on an image</td>
+<td>Choose an image with a lighter area behind the text</td>
+</tr>
+</tbody>
+</table>
+<p>To view the sandbox locally: <code>npx aem up --html-folder drafts --prefer-plain-html --port 3001</code>, then open <code>/drafts/list</code> (both variations) and <code>/drafts/list-states</code> (new and partly filled cards).</p></body></html>
