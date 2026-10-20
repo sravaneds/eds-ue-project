@@ -1,0 +1,249 @@
+/* Ask: AI question bar (Figma "Floating menu" 4308:42483). Values: blocks/header/header-measurements.txt */
+.ask {
+  --ask-font-family: inter, inter-fallback, sans-serif;
+  --ask-font-size: 16px;
+  --ask-line-height: 22px;
+  --ask-font-weight: 500;
+  --ask-letter-spacing: -0.08px;
+  --ask-text-color: #0c0c0d;
+  --ask-placeholder-opacity: 0.65;
+  --ask-gap: 17px;
+  --ask-max-width: 607px;
+  --ask-field-background: #fff;
+  --ask-field-border-width: 1px;
+  --ask-field-border-color: #999;
+  --ask-field-radius: 58px;
+
+  /* 12px container + 4px/12px row + 8px search inset, minus the 1px border: 72px tall */
+  --ask-field-padding: 15px 23px 15px 31px;
+  --ask-field-shadow: none;
+  --ask-field-focus-border-width: 2px;
+  --ask-field-focus-border-color: #303030;
+  --ask-field-focus-shadow: 0 0 0 4px rgb(70 115 219 / 18%);
+  --ask-controls-gap: 12px;
+  --ask-control-size: 40px;
+  --ask-icon-size: 24px;
+  --ask-mic-color: #757575;
+  --ask-mic-active-color: #216ac3;
+  --ask-submit-size: 36px;
+  --ask-submit-icon-size: 20px;
+  --ask-submit-background: #999;
+  --ask-submit-opacity: 0.4;
+  --ask-submit-active-background: #216ac3;
+  --ask-submit-color: #fff;
+  --ask-menu-size: 59px;
+  --ask-menu-icon-size: 20px;
+  --ask-menu-background: #fff6;
+  --ask-menu-border-color: #999;
+  --ask-menu-color: #1e1e1e;
+  --ask-radius-full: 9999px;
+  --ask-focus-color: #216ac3;
+  --ask-chips-gap: 12px;
+  --ask-chips-max-width: 750px;
+  --ask-chips-margin-top: 40px;
+  --ask-chip-padding: 12px 32px;
+  --ask-chip-font-size: 18px;
+  --ask-chip-line-height: 29px;
+  --ask-chip-letter-spacing: -0.09px;
+  --ask-chip-background: #f5f5f5;
+  --ask-chip-border-color: #e6e6e6;
+  --ask-chip-hover-border-color: #999;
+  --ask-transition: 200ms ease;
+
+  font-family: var(--ask-font-family);
+  color: var(--ask-text-color);
+}
+
+.ask .ask-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--ask-gap);
+  max-width: var(--ask-max-width);
+  margin: 0 auto;
+}
+
+.ask .ask-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ask .ask-field {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--ask-controls-gap);
+  min-width: 0;
+  padding: var(--ask-field-padding);
+  border: var(--ask-field-border-width) solid var(--ask-field-border-color);
+  border-radius: var(--ask-field-radius);
+  background-color: var(--ask-field-background);
+  box-shadow: var(--ask-field-shadow);
+  transition: border-color var(--ask-transition), box-shadow var(--ask-transition);
+}
+
+.ask .ask-field:focus-within {
+  border-color: var(--ask-field-focus-border-color);
+  box-shadow: var(--ask-field-focus-shadow), inset 0 0 0 calc(var(--ask-field-focus-border-width) - var(--ask-field-border-width)) var(--ask-field-focus-border-color);
+}
+
+.ask .ask-field input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--ask-font-family);
+  font-size: var(--ask-font-size);
+  font-weight: var(--ask-font-weight);
+  line-height: var(--ask-line-height);
+  letter-spacing: var(--ask-letter-spacing);
+  color: var(--ask-text-color);
+  appearance: none;
+}
+
+.ask .ask-field input:focus {
+  outline: none;
+}
+
+.ask .ask-field input::placeholder {
+  color: var(--ask-text-color);
+  opacity: var(--ask-placeholder-opacity);
+}
+
+.ask .ask-field input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.ask .ask-controls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ask-controls-gap);
+}
+
+.ask .ask-icon {
+  display: block;
+  width: var(--ask-icon-size);
+  height: var(--ask-icon-size);
+  background-color: currentcolor;
+  mask: var(--ask-icon-url) center / contain no-repeat;
+}
+
+.ask .ask-icon-mic {
+  --ask-icon-url: url('../../icons/mic.svg');
+}
+
+.ask .ask-icon-arrow-right {
+  --ask-icon-url: url('../../icons/arrow-right.svg');
+}
+
+.ask .ask-icon-menu {
+  --ask-icon-url: url('../../icons/menu.svg');
+}
+
+.ask button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ask button:focus-visible {
+  outline: 2px solid var(--ask-focus-color);
+  outline-offset: 2px;
+}
+
+.ask .ask-mic {
+  width: var(--ask-control-size);
+  height: var(--ask-control-size);
+  border-radius: var(--ask-radius-full);
+  color: var(--ask-mic-color);
+}
+
+.ask .ask-mic[aria-pressed='true'] {
+  color: var(--ask-mic-active-color);
+}
+
+.ask .ask-submit {
+  width: var(--ask-submit-size);
+  height: var(--ask-submit-size);
+  border-radius: var(--ask-radius-full);
+  background-color: var(--ask-submit-active-background);
+  color: var(--ask-submit-color);
+  transition: background-color var(--ask-transition), opacity var(--ask-transition);
+}
+
+.ask .ask-field:has(input:placeholder-shown) .ask-submit {
+  background-color: var(--ask-submit-background);
+  opacity: var(--ask-submit-opacity);
+}
+
+.ask .ask-submit .ask-icon {
+  width: var(--ask-submit-icon-size);
+  height: var(--ask-submit-icon-size);
+}
+
+/* menu button, added in front of the bar by the header and footer */
+.ask .ask-menu {
+  flex-shrink: 0;
+  width: var(--ask-menu-size);
+  height: var(--ask-menu-size);
+  box-sizing: border-box;
+  border: 1px solid var(--ask-menu-border-color);
+  border-radius: var(--ask-radius-full);
+  background-color: var(--ask-menu-background);
+  color: var(--ask-menu-color);
+}
+
+.ask .ask-menu .ask-icon {
+  width: var(--ask-menu-icon-size);
+  height: var(--ask-menu-icon-size);
+}
+
+/* suggested questions */
+.ask .ask-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ask-chips-gap);
+  max-width: var(--ask-chips-max-width);
+  margin: var(--ask-chips-margin-top) auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ask .ask-chip {
+  padding: var(--ask-chip-padding);
+  border: 1px solid var(--ask-chip-border-color);
+  border-radius: var(--ask-radius-full);
+  background-color: var(--ask-chip-background);
+  font-size: var(--ask-chip-font-size);
+  font-weight: var(--ask-font-weight);
+  line-height: var(--ask-chip-line-height);
+  letter-spacing: var(--ask-chip-letter-spacing);
+  color: var(--ask-text-color);
+  transition: border-color var(--ask-transition);
+}
+
+.ask .ask-chip:hover {
+  border-color: var(--ask-chip-hover-border-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask .ask-field,
+  .ask .ask-submit,
+  .ask .ask-chip {
+    transition: none;
+  }
+}

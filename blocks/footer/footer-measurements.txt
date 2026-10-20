@@ -1,0 +1,49 @@
+VISUAL MEASUREMENT CHECKLIST FOR footer
+=======================================
+Figma file yElx5Tf9wr8G2vCXopi49W
+Nodes: desktop "Footer" 2496:91965, tablet 4347:44552, mobile 4347:44593
+Date: 2026-10-20
+
+LAYOUT & DIMENSIONS
+☑ Height: 910 desktop, 750 tablet, 800 mobile (source: Footer instances)
+☑ Padding desktop: 120px 80px 40px (source: ContentSlot y-offset 120, width 1280, Links-Row bottom 40)
+☑ Padding tablet: 80px 80px 40px (source: ContentSlot y-offset 80, width 864)
+☑ Padding mobile: 56px 24px 24px (source: ContentSlot y-offset 56; side padding 24 used because the Figma mobile slot overflows)
+☑ Heading to ask bar gap: 80px desktop, 64px tablet, 64px mobile (source: details gap-[80px]; tablet/mobile ask offsets)
+☑ Ask bar: 609x72 centered (source: floating menu 7637:5795)
+☑ Ask bar to chips: 40px (source: Frame 1321318542 y - details bottom)
+☑ Chips: max-width 750px, centered, wrap, gap 12px (source: state-5-pills w-[750px] gap-[12px])
+☑ Chip padding: 12px 32px (source: Filter tag px-[32px] py-[12px])
+☑ Chips to links row: 108px desktop, 88px tablet, 72px mobile (source: Links-Row pt-[80px] + offsets)
+☑ Links row: justify-between, wrap, gap 40px desktop/tablet; stacked gap 16px mobile (source: Links-Row)
+
+COLORS
+☑ Background: #ffffff with blurred blue #4673db 30% (bottom-left) and yellow #e8b931 30% (bottom-right) (source: bg 7312:13904 blue/yellow)
+☑ Heading color: #1e2222 (source: text 7312:13893)
+☑ Body / link color: #0c0c0d (source: Links-Row Text-Default-Default)
+☑ Chip background: #f5f5f5 (source: Background-Default-Secondary)
+☑ Chip border: 1px #e6e6e6 (source: Filter tag border)
+☑ Ask menu button: #216ac3 background, 1px #e6e6e6 border, white glyph (source: Icon Button 7638:4045)
+☑ Ask input: 2px #303030 border, 4px rgba(70,115,219,0.18) ring (source: AI input container 7638:4047)
+☑ Ask submit: #216ac3 (source: Controls in the footer floating menu)
+
+TYPOGRAPHY
+☑ Heading: Inter 500 96px/115px, -2.88px, centered (source: Headings/Inter-96)
+☑ Heading tablet: Inter 500 64px/77px, -1.92px (source: tablet text 864x154 = 2 lines of 77px)
+☑ Heading mobile: Inter 500 44px/53px, -1.32px (source: mobile text design context)
+☑ Chip: Inter 500 18px/29px, -0.09px (source: Body/Inter-18)
+☑ Links row: Inter 500 16px/22px desktop, 14px/20px tablet, 12px/17px mobile (source: Links-Row text nodes)
+☑ Ask input: Inter 500 16px/22px, -0.08px, placeholder 100% (source: footer AI input text)
+
+BORDERS & RADIUS
+☑ Chip radius: full (source: rounded-full)
+☑ Ask input radius: 58px; menu button radius 151px (source: floating menu)
+☑ Footer corners: 0 (source: no radius on Footer frame)
+
+SHADOWS
+☑ Ask ring: 0 0 0 4px rgba(70,115,219,0.18) (source: boxShadow)
+☑ Chips: none (source: no shadow)
+
+EFFECTS & TRANSITIONS
+☑ Chip hover: border #999999 (not in Figma; uses the header border token)
+☑ Transitions: 200ms ease

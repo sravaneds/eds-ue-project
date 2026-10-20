@@ -1,20 +1,162 @@
-footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+/* Footer (Figma "Footer" 2496:91965 desktop, 4347:44552 tablet, 4347:44593 mobile).
+   Values: footer-measurements.txt */
+.footer {
+  --footer-font-family: inter, inter-fallback, sans-serif;
+  --footer-background: #fff;
+  --footer-glow-blue: rgb(70 115 219 / 30%);
+  --footer-glow-yellow: rgb(232 185 49 / 30%);
+  --footer-padding: 56px 24px 24px;
+  --footer-max-width: 1280px;
+  --footer-heading-color: #1e2222;
+  --footer-heading-size: 44px;
+  --footer-heading-line-height: 53px;
+  --footer-heading-weight: 500;
+  --footer-heading-letter-spacing: -1.32px;
+  --footer-heading-gap: 64px;
+  --footer-text-color: #0c0c0d;
+  --footer-text-size: 12px;
+  --footer-text-line-height: 17px;
+  --footer-text-weight: 500;
+  --footer-bottom-gap: 72px;
+  --footer-links-gap: 16px;
+  --footer-focus-color: #216ac3;
 }
 
-footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+/* Ask bar: the footer shows it in its active style */
+.footer .ask {
+  --ask-max-width: 609px;
+  --ask-field-border-width: 2px;
+  --ask-field-border-color: #303030;
+  --ask-field-shadow: 0 0 0 4px rgb(70 115 219 / 18%);
+  --ask-field-padding: 14px 22px 14px 30px;
+  --ask-placeholder-opacity: 1;
+  --ask-mic-color: #0c0c0d;
+  --ask-submit-background: #216ac3;
+  --ask-submit-opacity: 1;
+  --ask-menu-background: #216ac3;
+  --ask-menu-border-color: #e6e6e6;
+  --ask-menu-color: #fff;
 }
 
-footer .footer p {
+@media (width >= 600px) {
+  .footer {
+    --footer-padding: 80px 80px 40px;
+    --footer-heading-size: 64px;
+    --footer-heading-line-height: 77px;
+    --footer-heading-letter-spacing: -1.92px;
+    --footer-text-size: 14px;
+    --footer-text-line-height: 20px;
+    --footer-bottom-gap: 88px;
+    --footer-links-gap: 40px;
+  }
+}
+
+@media (width >= 1200px) {
+  .footer {
+    --footer-padding: 120px 80px 40px;
+    --footer-heading-size: 96px;
+    --footer-heading-line-height: 115px;
+    --footer-heading-letter-spacing: -2.88px;
+    --footer-heading-gap: 80px;
+    --footer-text-size: 16px;
+    --footer-text-line-height: 22px;
+    --footer-bottom-gap: 108px;
+  }
+}
+
+footer .footer {
+  background-color: var(--footer-background);
+  background-image:
+    radial-gradient(50% 40% at 20% 100%, var(--footer-glow-blue), transparent),
+    radial-gradient(45% 40% at 85% 100%, var(--footer-glow-yellow), transparent);
+  font-family: var(--footer-font-family);
+  color: var(--footer-text-color);
+}
+
+.footer .footer-content {
+  box-sizing: border-box;
+  max-width: calc(var(--footer-max-width) + 160px);
+  margin: 0 auto;
+  padding: var(--footer-padding);
+}
+
+.footer .footer-content > .section {
   margin: 0;
+  padding: 0;
 }
 
-@media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+.footer .footer-content .section > div {
+  max-width: none;
+  padding: 0;
+}
+
+/* call to action */
+.footer .footer-cta h1,
+.footer .footer-cta h2,
+.footer .footer-cta h3 {
+  margin: 0 0 var(--footer-heading-gap);
+  font-family: var(--footer-font-family);
+  font-size: var(--footer-heading-size);
+  font-weight: var(--footer-heading-weight);
+  line-height: var(--footer-heading-line-height);
+  letter-spacing: var(--footer-heading-letter-spacing);
+  text-align: center;
+  text-wrap: balance;
+  color: var(--footer-heading-color);
+}
+
+/* bottom row: copyright and links */
+.footer .footer-content > .footer-bottom {
+  margin-top: var(--footer-bottom-gap);
+  font-size: var(--footer-text-size);
+  font-weight: var(--footer-text-weight);
+  line-height: var(--footer-text-line-height);
+}
+
+.footer .footer-bottom .default-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--footer-links-gap);
+}
+
+.footer .footer-bottom p,
+.footer .footer-bottom ul {
+  margin: 0;
+  padding: 0;
+}
+
+.footer .footer-bottom ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--footer-links-gap);
+  list-style: none;
+}
+
+.footer .footer-bottom a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer .footer-bottom a:hover {
+  text-decoration: underline;
+}
+
+.footer .footer-content a:focus-visible {
+  outline: 2px solid var(--footer-focus-color);
+  outline-offset: 2px;
+}
+
+/* mobile: the header bar has the menu icon, as in the floating bar */
+@media (width < 600px) {
+  .footer .ask .ask-menu {
+    display: none;
+  }
+}
+
+@media (width >= 600px) {
+  .footer .footer-bottom .default-content-wrapper {
+    flex-flow: row wrap;
+    align-items: flex-end;
+    justify-content: space-between;
   }
 }

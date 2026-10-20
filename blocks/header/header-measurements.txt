@@ -1,0 +1,55 @@
+VISUAL MEASUREMENT CHECKLIST FOR header
+=======================================
+Figma file yElx5Tf9wr8G2vCXopi49W
+Nodes: desktop "Logos" 667:52520 + "Floating menu" 4308:42483 (home-desktop 229:15426)
+       tablet "Mobile Nav" 1124:25497 + "Floating menu" 4308:42466 (home-tablet 671:52732)
+       mobile "Mobile Nav" 2325:55704 + "Floating menu" 4308:34860 (home-mobile 671:53791)
+Date: 2026-10-20
+
+LAYOUT & DIMENSIONS
+☑ Bar width: 100% (1440 / 1024 / 402) (source: Nav Bar-NEW w-full, Mobile Nav instance widths)
+☑ Bar height: 124px desktop, 96px tablet/mobile (source: Logos 1440x124, Mobile Nav 1024x96 / 402x96)
+☑ Bar padding desktop: 40px 80px (source: Nav Bar-NEW px-[80px] py-[40px])
+☑ Bar padding tablet/mobile: 0 24px, items bottom-aligned 12px above the bar edge (source: TCS Logo Container x=24, Menu x=W-56)
+☑ Bar layout desktop: justify-between, TCS logo left, Tata logo right (source: Nav Bar-NEW justify-between)
+☑ Bar layout tablet/mobile: logos grouped left (gap 27.83px), menu icon right (source: TCS Logo Container gap-[27.826px])
+☑ TCS logo: 146x35 desktop, 128.65x30.66 tablet/mobile (source: Vector 7412:18666, TCS Logo 4186:13837)
+☑ Tata logo: 50x44 desktop, 44.06x38 tablet/mobile (source: Vector 7412:18670, Tata Logo 4186:13838)
+☑ Menu icon (bar): 32x32, glyph 24x16 (source: Menu 4186:13839, Icon 14:2099)
+☑ Floating menu width: 607 desktop, 463 tablet, 375 mobile; height 72 (source: Floating menu instances)
+☑ Floating menu gap (button to input): 17px (source: Icon Button x + 59 + 17 = AI input x)
+☑ Floating menu position: centered horizontally, near the bottom of the first screen (source: x=(1440-607)/2)
+☑ Menu button: 59x59, padding 12px, glyph 20x20 (source: Icon Button 7303:13461 w-[59px] p-[12px], Menu 20x20)
+☑ Menu button shown: desktop + tablet only (source: mobile Floating menu has no Icon Button)
+☑ Input container: padding 12px, inner row 4px 12px, search pl 8px, height 30px, gap 10px (source: AI input container 7303:13460)
+☑ Controls: gap 12px; mic button 40x40 (padding 12px 16px); submit 36x36 (padding 8px) (source: Controls 3665:3424, Button 3665:3425, Icon Button/Primary/Default/Small 3665:3427)
+
+COLORS
+☑ Bar background: #ffffff (source: Logos frame, page background)
+☑ Logo color: #1e1e1e (source: Icon-Default-Default #1e1e1e)
+☑ Menu button background: #ffffff66 (white 40%) (source: Background-Default-Opacity-BG)
+☑ Menu button border: 1px #999999 (source: border-[#999999])
+☑ Input background: #ffffff (source: Background-Default-Default)
+☑ Input border: 1px #999999 (source: AI input container border-[#999999])
+☑ Placeholder text: #0c0c0d at 65% opacity (source: Text-Default-Default, opacity 0.65)
+☑ Submit (empty): #999999 at 40% opacity, icon white (source: Background-Default-Tertiary-Hover, opacity 0.40)
+☑ Submit (with text): #216ac3 (source: footer floating menu Background-Brand-Tertiary)
+☑ Focus ring: 0 0 0 4px rgba(70,115,219,0.18) + 2px #303030 border (source: footer AI input container focused state)
+
+TYPOGRAPHY
+☑ Input font: Inter 500 16px/22px, letter-spacing -0.08px (source: Ask TCS... text 3665:3423)
+☑ Menu links (not in Figma): Inter 600 40px/56px desktop, 28px/39px mobile, -1px (source: reuses Headings/Inter-40 and the mobile heading token)
+
+BORDERS & RADIUS
+☑ Menu button radius: 151px (fully round) (source: rounded-[151px])
+☑ Input radius: 58px (source: rounded-[58px])
+☑ Submit radius: full (source: rounded-full)
+☑ Border width: 1px default, 2px focused (source: border-[1px], footer border-[2px])
+
+SHADOWS
+☑ Default: none (source: no shadow classes on header floating menu)
+☑ Focused input: 0 0 0 4px rgba(70,115,219,0.18) (source: footer boxShadow)
+
+EFFECTS & TRANSITIONS
+☑ Transitions: 200ms ease (source: matches hero block transition token; Figma has no prototype timing)
+☑ Open menu state: not in Figma; full-screen white dialog using the same tokens
