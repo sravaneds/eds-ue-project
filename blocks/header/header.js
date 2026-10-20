@@ -189,6 +189,9 @@ export default async function decorate(block) {
     }
   }
 
+  // without an ask bar, the bar's menu icon stays visible on desktop too
+  if (!askBlock) bar.classList.add('nav-bar-no-ask');
+
   triggers.forEach((t) => t.addEventListener('click', open));
   block.append(wrapper);
 }

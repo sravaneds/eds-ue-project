@@ -1,0 +1,355 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Header and Footer: Authoring Guide</title><style>body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1f2328;max-width:900px;margin:40px auto;padding:0 24px;line-height:1.55;font-size:15px}
+h1{font-size:30px;border-bottom:2px solid #1d3ecf;padding-bottom:8px}
+h2{font-size:22px;margin-top:40px;border-bottom:1px solid #d0d7de;padding-bottom:6px;break-after:avoid}
+h3{font-size:18px;margin-top:28px;break-after:avoid}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px;break-inside:avoid}
+th,td{border:1px solid #d0d7de;padding:6px 10px;text-align:left;vertical-align:top}
+th{background:#f6f8fa}
+code{background:#f6f8fa;padding:1px 5px;border-radius:4px;font-size:13px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow:auto;font-size:12.5px;break-inside:avoid}
+pre code{background:none;padding:0}
+img{max-width:100%;border:1px solid #d0d7de;border-radius:6px;margin:8px 0;break-inside:avoid}
+p:has(> img){text-align:center}
+blockquote{margin:12px 0;padding:8px 14px;border-left:4px solid #1d3ecf;background:#f3f6ff;color:#333}
+hr{border:0;border-top:1px solid #d0d7de;margin:28px 0}
+a{color:#1d3ecf}</style></head><body><h1 id="header-and-footer-authoring-guide">Header and Footer: Authoring Guide</h1>
+<p><strong>Audience:</strong> content authors and reviewers in AEM Universal Editor. Developers: see <code>blocks/header/</code>, <code>blocks/footer/</code> and <code>blocks/ask/</code>, and the Figma measurements in <code>blocks/*/…-measurements.txt</code>.</p>
+<p><strong>About the screenshots:</strong> they show the header and footer as rendered in the local preview, at desktop (1440px), tablet (1024px) and mobile (402px) widths. The Universal Editor interface itself (Content Tree, Add menu, properties panel) can't be captured from this environment, so those steps are described in text. Numbered orange badges were added for this guide; they don't appear on the page. The "Home Page" text and the dark hero below the header belong to the test page, not to the header.</p>
+<p><strong>Status:</strong> tested in the local preview at desktop, tablet and mobile widths. Still to confirm in your AEM author environment: editing the nav and footer pages, and the <strong>Navigation</strong> and <strong>Footer</strong> page fields.</p>
+<hr>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-how-the-header-and-footer-work">How the header and footer work</a></li>
+<li><a href="#2-edit-the-header-nav-page">Edit the header (nav page)</a></li>
+<li><a href="#3-the-ask-block">The Ask block</a></li>
+<li><a href="#4-edit-the-footer-footer-page">Edit the footer (footer page)</a></li>
+<li><a href="#5-use-a-different-header-or-footer-on-a-page">Use a different header or footer on a page</a></li>
+<li><a href="#6-how-visitors-use-it">How visitors use it</a></li>
+<li><a href="#7-tablet-and-mobile">Tablet and mobile</a></li>
+<li><a href="#8-publish-changes">Publish changes</a></li>
+<li><a href="#9-accessibility-checklist">Accessibility checklist</a></li>
+<li><a href="#10-troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr>
+<h2 id="1-how-the-header-and-footer-work">1. How the header and footer work</h2>
+<p>The header and footer aren't edited on each page. Each one is its own page, shared by every page of the site:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Edited on</th>
+<th>Contains</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Header</td>
+<td>the <strong>nav</strong> page (<code>/nav</code>)</td>
+<td>Logos, menu links, the floating ask bar</td>
+</tr>
+<tr>
+<td>Footer</td>
+<td>the <strong>footer</strong> page (<code>/footer</code>)</td>
+<td>Closing heading, ask bar with suggested questions, copyright and links</td>
+</tr>
+</tbody>
+</table>
+<p>Change the nav or footer page once, publish it, and every page shows the change.</p>
+<p><img src="images/header-desktop.jpg" alt="The header on desktop"></p>
+<p><img src="images/footer-desktop.jpg" alt="The footer on desktop"></p>
+<hr>
+<h2 id="2-edit-the-header-nav-page">2. Edit the header (nav page)</h2>
+<p>Open the <strong>nav</strong> page in Universal Editor. It holds up to three sections, in any order. The header recognises each one by what it contains:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Add these components</th>
+<th>Becomes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logos</td>
+<td>Two <strong>Image</strong> components</td>
+<td>Company logo (links to the home page) and group mark</td>
+</tr>
+<tr>
+<td>Menu</td>
+<td>One <strong>Text</strong> component with a bulleted list of links</td>
+<td>The menu that opens from the menu button</td>
+</tr>
+<tr>
+<td>Ask bar</td>
+<td>One <strong>Ask</strong> block</td>
+<td>The floating ask bar at the bottom of the screen</td>
+</tr>
+</tbody>
+</table>
+<p>This is the nav page as you see it while editing. The styling only appears in the real header:</p>
+<p><img src="images/nav-page.jpg" alt="The nav page while editing"></p>
+<h3 id="header-anatomy">Header anatomy</h3>
+<p><img src="images/anatomy-header.jpg" alt="Header parts"></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Part</th>
+<th>Where to change it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Company logo</td>
+<td>First <strong>Image</strong> in the logos section. Its <strong>Alt Text</strong> names the home link, e.g. "Tata Consultancy Services"</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Group mark</td>
+<td>Second <strong>Image</strong> in the logos section. Alt Text, e.g. "Tata group"</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Menu button</td>
+<td>Added automatically. Opens the menu</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Prompt text</td>
+<td><strong>Ask</strong> block → <strong>Prompt Text</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Voice input</td>
+<td>Added automatically, in browsers that support speech input</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Send</td>
+<td>Added automatically. Grey until a question is typed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="logos">Logos</h3>
+<ul>
+<li>Upload the logos to Assets and choose them in the <strong>Image</strong> components. The header sets their height (35px on desktop, 31px on smaller screens), so any width works.</li>
+<li>The first logo links to the site's home page. To link it somewhere else, add a <strong>Button</strong> to the logos section with the target page. It isn't shown; only its link is used.</li>
+</ul>
+<h3 id="menu-links">Menu links</h3>
+<p>Add a <strong>Text</strong> component to the menu section and write a bulleted list where every item is a link:</p>
+<ul>
+<li><strong>Simple menu:</strong> one level of links, as on the current site.</li>
+<li><strong>Grouped menu:</strong> an item that isn't a link, with an indented list under it, becomes a group. Its text shows as a small grey label above its links.</li>
+</ul>
+<p>When opened, the menu shows the links in one column on mobile and three columns on wider screens:</p>
+<p><img src="images/menu-desktop.jpg" alt="The open menu on desktop"></p>
+<hr>
+<h2 id="3-the-ask-block">3. The Ask block</h2>
+<p>The <strong>Ask</strong> block is the question bar. The nav page uses it for the floating bar and the footer page for its large bar. It can also be added to any normal page section.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prompt Text</td>
+<td>Required, up to 60 characters. Shown in the empty input and read out by screen readers as the input's label</td>
+</tr>
+<tr>
+<td>Answer Page</td>
+<td>The page that answers questions. The question is added to its address as <code>?q=…</code>. Leave it empty until an answer page exists; the question then reloads the current page</td>
+</tr>
+<tr>
+<td>Suggested Questions</td>
+<td>Optional bulleted list. Each item becomes a chip that asks that question when clicked</td>
+</tr>
+</tbody>
+</table>
+<p>When a visitor types, the send button turns blue:</p>
+<p><img src="images/ask-typing.jpg" alt="Ask bar with a typed question"></p>
+<hr>
+<h2 id="4-edit-the-footer-footer-page">4. Edit the footer (footer page)</h2>
+<p>Open the <strong>footer</strong> page in Universal Editor. It has two sections:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Add these components</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Top (call to action)</td>
+<td>A <strong>Title</strong> (use Heading 2) and an <strong>Ask</strong> block with <strong>Suggested Questions</strong></td>
+</tr>
+<tr>
+<td>Bottom row</td>
+<td>A <strong>Text</strong> component: the copyright line, then the links (e.g. "Privacy &#x26; Terms")</td>
+</tr>
+</tbody>
+</table>
+<p>The section holding the Ask block becomes the top area. Every other section becomes the bottom row.</p>
+<p>This is the footer page as you see it while editing:</p>
+<p><img src="images/footer-page.jpg" alt="The footer page while editing"></p>
+<h3 id="footer-anatomy">Footer anatomy</h3>
+<p><img src="images/anatomy-footer.jpg" alt="Footer parts"></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Part</th>
+<th>Where to change it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Heading</td>
+<td><strong>Title</strong> component, e.g. "Let's build the future together"</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Menu button</td>
+<td>Added automatically. Opens the same menu as the header</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Prompt text</td>
+<td><strong>Ask</strong> block → <strong>Prompt Text</strong>, e.g. "Ask us a question"</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Suggested questions</td>
+<td><strong>Ask</strong> block → <strong>Suggested Questions</strong>, one bullet per chip</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Copyright</td>
+<td>First paragraph of the bottom-row <strong>Text</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Links</td>
+<td>Links in the bottom-row <strong>Text</strong>. A link authored as a <strong>Button</strong> is still shown as a plain link</td>
+</tr>
+</tbody>
+</table>
+<p>Tips:</p>
+<ul>
+<li>Keep chips to a few words each. About 6 to 8 chips fit the design.</li>
+<li>Update the copyright year in the bottom-row text.</li>
+</ul>
+<hr>
+<h2 id="5-use-a-different-header-or-footer-on-a-page">5. Use a different header or footer on a page</h2>
+<p>By default every page uses <code>/nav</code> and <code>/footer</code>. To give a page, or a microsite, its own header or footer:</p>
+<ol>
+<li>Create another nav or footer page with the same structure (sections 2 and 4).</li>
+<li>Open the page's <strong>Properties</strong> and choose that page in <strong>Navigation</strong> or <strong>Footer</strong>.</li>
+</ol>
+<p>Leave the fields empty to use the defaults.</p>
+<hr>
+<h2 id="6-how-visitors-use-it">6. How visitors use it</h2>
+<ul>
+<li><strong>Floating ask bar:</strong> stays at the bottom of the screen while visitors read. It fades away once the footer comes into view, because the footer has its own ask bar:</li>
+</ul>
+<p><img src="images/floating-hidden.jpg" alt="The floating bar hides near the footer"></p>
+<ul>
+<li><strong>Menu:</strong> opens from the menu button in the floating bar, the menu icon in the header (tablet and mobile), or the footer's menu button. It covers the whole screen and closes with the <strong>×</strong> button, the <strong>Esc</strong> key, or by choosing a link.</li>
+<li><strong>In Universal Editor:</strong> the floating bar stays below the header instead of floating, so it never covers the content you're editing.</li>
+</ul>
+<hr>
+<h2 id="7-tablet-and-mobile">7. Tablet and mobile</h2>
+<p>Nothing needs to be set for smaller screens. On tablet and mobile both logos sit on the left and a menu icon appears on the right.</p>
+<p><strong>Tablet:</strong> the floating bar keeps its menu button.</p>
+<p><img src="images/header-tablet.jpg" alt="Header on tablet"></p>
+<p><img src="images/footer-tablet.jpg" alt="Footer on tablet"></p>
+<p><strong>Mobile:</strong> the floating bar and the footer's ask bar drop their menu button, because the header's menu icon is always available.</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Menu</th>
+<th>Footer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="images/header-mobile.jpg" alt="Header on mobile"></td>
+<td><img src="images/menu-mobile.jpg" alt="Menu on mobile"></td>
+<td><img src="images/footer-mobile.jpg" alt="Footer on mobile"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="8-publish-changes">8. Publish changes</h2>
+<ol>
+<li>Edit the <strong>nav</strong> or <strong>footer</strong> page.</li>
+<li>Publish that page (Quick Publish, or Manage Publication). Preview first if your workflow uses it.</li>
+</ol>
+<p>Every page picks up the change; there's no need to republish other pages.</p>
+<hr>
+<h2 id="9-accessibility-checklist">9. Accessibility checklist</h2>
+<p>Built in:</p>
+<ul>
+<li>The header is announced as the main navigation, and the ask bars as search areas with labelled inputs.</li>
+<li>The menu is a true dialog: keyboard focus moves into it, stays inside while it's open, and returns to the button that opened it.</li>
+<li>Buttons announce what they do ("Open menu", "Close menu", "Ask by voice", "Send question"), and the header's menu buttons say whether the menu is open.</li>
+<li>The floating bar is skipped by the keyboard while it's hidden near the footer.</li>
+<li>Visible blue focus outlines throughout.</li>
+</ul>
+<p>Authors should:</p>
+<ul>
+<li>Give the first logo <strong>Alt Text</strong> with the company name. It names the home link.</li>
+<li>Write <strong>Prompt Text</strong> as a short instruction, e.g. "Ask us a question".</li>
+<li>Write menu link text that describes the destination, e.g. "Careers", not "Click here".</li>
+<li>Keep the footer heading as a <strong>Heading 2</strong>.</li>
+</ul>
+<hr>
+<h2 id="10-troubleshooting">10. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The header shows no logo</td>
+<td>Add an <strong>Image</strong> to the logos section of the nav page, then publish the nav page</td>
+</tr>
+<tr>
+<td>There's no floating ask bar</td>
+<td>Add an <strong>Ask</strong> block to the nav page. Without it, the menu icon shows in the header instead</td>
+</tr>
+<tr>
+<td>A menu item isn't clickable</td>
+<td>Make sure the list item is a link. Items that aren't links become group labels</td>
+</tr>
+<tr>
+<td>The menu shows "Examples, Getting Started…"</td>
+<td>The published nav page still has the old boilerplate content. Publish the new nav page</td>
+</tr>
+<tr>
+<td>Questions go nowhere</td>
+<td>Set <strong>Answer Page</strong> on the Ask block</td>
+</tr>
+<tr>
+<td>No microphone button</td>
+<td>It only appears in browsers that support speech input, e.g. not Firefox</td>
+</tr>
+<tr>
+<td>A page shows a different header</td>
+<td>Check the page's <strong>Properties</strong> → <strong>Navigation</strong></td>
+</tr>
+<tr>
+<td>"Privacy &#x26; Terms" looks like a button</td>
+<td>It's shown as a plain link in the footer. If not, check it's in the bottom-row section, not the top one</td>
+</tr>
+</tbody>
+</table>
+<p>To view the sandbox locally: <code>npx aem up --html-folder drafts --prefer-plain-html --port 3001</code>, then open <code>/drafts/header-footer</code> (full header and footer) and <code>/drafts/header-no-ask</code> (header without an ask bar).</p></body></html>
