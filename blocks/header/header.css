@@ -266,7 +266,7 @@ html:has(.header .nav-menu[open]) {
     margin-left: auto;
   }
 
-  .header .nav-bar .nav-menu-button {
+  .header .nav-bar:not(.nav-bar-no-ask) .nav-menu-button {
     display: none;
   }
 }
