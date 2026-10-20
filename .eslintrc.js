@@ -20,7 +20,10 @@ module.exports = {
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
     // tabs-item (legacy Tabs block): one cell per tab setting, read by position even when
     // optional ones are empty; tabs-section: a section model, rendered as key-value
-    // section metadata rather than cells
-    'xwalk/max-cells': ['error', { '*': 4, 'tabs-item': 11, 'tabs-section': 13 }],
+    // section metadata rather than cells; list-theme / list-insight (List block cards): one
+    // cell per card field, read by position
+    'xwalk/max-cells': ['error', {
+      '*': 4, 'tabs-item': 11, 'tabs-section': 13, 'list-theme': 6, 'list-insight': 9,
+    }],
   },
 };

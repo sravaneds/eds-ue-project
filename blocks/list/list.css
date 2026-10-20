@@ -1,0 +1,538 @@
+/* List: header lockup + cards. Variations: themes, insights */
+
+main > .section > .list-wrapper {
+  max-width: 1440px;
+}
+
+.list {
+  --list-font-family: inter, inter-fallback, sans-serif;
+  --list-text-color: #0c0c0d;
+  --list-neutral-color: #303030;
+  --list-secondary-color: #5a5a5a;
+  --list-divider-color: #999;
+  --list-dark-color: #20293c;
+  --list-brand-color: #216ac3;
+  --list-focus-color: #216ac3;
+  --list-radius: 16px;
+  --list-gap: 16px;
+
+  padding-block: 24px;
+  font-family: var(--list-font-family);
+  color: var(--list-text-color);
+}
+
+.list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list h2,
+.list h3,
+.list p {
+  margin: 0;
+}
+
+.list .list-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* header lockup */
+.list .list-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 24px;
+}
+
+.list .list-title {
+  flex: 1 1 320px;
+  font-family: var(--list-font-family);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 39px;
+  letter-spacing: -0.7px;
+  color: var(--list-text-color);
+}
+
+/* arrow links */
+.list .list-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.16px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.list .list-arrow {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background-color: currentcolor;
+  mask: url('../../icons/arrow-right.svg') center / contain no-repeat;
+  transition: transform 0.2s ease;
+}
+
+.list .list-link:hover .list-arrow,
+.list .list-card-linked:hover .list-arrow {
+  transform: translateX(4px);
+}
+
+.list .list-link:hover {
+  text-decoration: underline;
+}
+
+.list .list-header-action .list-link {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 0.12px;
+  color: var(--list-text-color);
+}
+
+.list a:focus-visible {
+  outline: 2px solid var(--list-focus-color);
+  outline-offset: 2px;
+}
+
+/* shared card parts */
+.list .list-card {
+  position: relative;
+  border-radius: var(--list-radius);
+}
+
+.list .list-eyebrow,
+.list .list-meta {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  text-transform: uppercase;
+}
+
+.list .list-card-title {
+  font-family: var(--list-font-family);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 34px;
+  letter-spacing: -0.84px;
+  color: inherit;
+}
+
+.list .list-card-description {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 26px;
+  letter-spacing: 0.16px;
+  opacity: 0.7;
+}
+
+.list .list-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list .list-card-media {
+  overflow: hidden;
+  border-radius: var(--list-radius);
+}
+
+.list .list-card-media picture,
+.list .list-card-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.list .list-card-media img,
+.list .list-card-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.list .list-card-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* whole card is clickable through its link */
+.list .list-card-linked .list-link-stretched::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--list-radius);
+}
+
+.list .list-card-linked .list-link-stretched:focus-visible {
+  outline: none;
+}
+
+.list .list-card-linked:has(.list-link-stretched:focus-visible) {
+  outline: 2px solid var(--list-focus-color);
+  outline-offset: 4px;
+}
+
+/* meta lines: values separated by dividers */
+.list .list-meta,
+.list .list-footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 8px;
+}
+
+.list .list-meta {
+  color: var(--list-secondary-color);
+}
+
+.list .list-meta li + li::before,
+.list .list-footer-meta li + li::before {
+  content: '|' / '';
+  margin-right: 8px;
+  font-size: 16px;
+  color: var(--list-divider-color);
+}
+
+.list .list-meta .list-read-time {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.list .list-footer-meta {
+  padding-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--list-text-color);
+}
+
+.list .list-footer-meta li + li::before {
+  color: inherit;
+}
+
+/* Themes */
+.list.themes {
+  margin-inline: -8px;
+}
+
+.list.themes .list-items {
+  display: flex;
+  gap: var(--list-gap);
+  margin-inline: -16px;
+  padding-inline: 16px;
+  overflow-x: auto;
+  scroll-padding-inline: 16px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.list.themes .list-items::-webkit-scrollbar {
+  display: none;
+}
+
+.list.themes .list-items > li {
+  flex: 0 0 min(306px, 82%);
+  scroll-snap-align: start;
+}
+
+/* 2:3 cards that still grow with long content: the spacer sets the minimum height */
+.list .list-theme-card {
+  display: flex;
+}
+
+.list .list-theme-card::before,
+.list .list-report::before {
+  content: '';
+  flex: 0 0 0;
+  padding-bottom: 150%;
+}
+
+.list .list-theme-card .list-card-body,
+.list .list-report .list-card-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 24px;
+}
+
+.list .list-theme-card.surface-dark {
+  background-color: var(--list-dark-color);
+  color: #f3f3f3;
+}
+
+.list .list-theme-card.surface-dark .list-eyebrow {
+  color: #cdcdcd;
+}
+
+.list .list-theme-card.surface-brand {
+  background-color: var(--list-brand-color);
+  color: #fff;
+}
+
+.list .list-theme-card.surface-brand .list-card-description {
+  opacity: 0.9;
+}
+
+.list .list-theme-card.has-image {
+  background-color: var(--list-dark-color);
+  color: var(--list-neutral-color);
+}
+
+.list .list-theme-card.has-image .list-eyebrow {
+  color: var(--list-text-color);
+}
+
+.list .list-progress {
+  height: 4px;
+  margin-top: 16px;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: #ededed;
+}
+
+.list .list-progress span {
+  display: block;
+  width: 25%;
+  height: 100%;
+  border-radius: 2px;
+  background-color: #808080;
+}
+
+/* Insights */
+.list.insights .list-header {
+  margin-bottom: 40px;
+}
+
+.list.insights .list-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.list .list-featured {
+  grid-column: 1 / -1;
+  display: flex;
+  min-height: 520px;
+  overflow: hidden;
+  background-color: #e8ebf0;
+  color: #000;
+}
+
+.list .list-featured .list-card-media {
+  position: absolute;
+  inset: 0;
+}
+
+.list .list-featured .list-card-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+}
+
+.list .list-featured .list-card-title {
+  max-width: 600px;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 36px;
+  letter-spacing: -0.84px;
+}
+
+.list .list-featured .list-read-time {
+  font-size: 16px;
+}
+
+.list .list-article,
+.list .list-case-study {
+  display: flex;
+  flex-direction: column;
+}
+
+.list .list-article .list-card-media {
+  aspect-ratio: 16 / 9;
+}
+
+.list .list-case-study .list-card-media {
+  aspect-ratio: 1;
+}
+
+.list .list-article .list-card-body,
+.list .list-case-study .list-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-block: 12px;
+}
+
+.list .list-article .list-card-title,
+.list .list-case-study .list-card-title {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 34px;
+  letter-spacing: -0.36px;
+  color: var(--list-neutral-color);
+}
+
+.list .list-report {
+  display: flex;
+  background: linear-gradient(160deg, #dce3ec 0%, #ebeae6 100%);
+  color: var(--list-neutral-color);
+}
+
+.list .list-insight-card.list-report .list-eyebrow {
+  color: var(--list-secondary-color);
+}
+
+.list .list-insight-card.list-report .list-card-description {
+  color: var(--list-text-color);
+}
+
+.list .list-report .list-link {
+  color: var(--list-text-color);
+}
+
+.list .list-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.list .list-card-linked:hover .list-title-link {
+  text-decoration: underline;
+}
+
+@media (width >= 600px) {
+  .list .list-header-action .list-link {
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 0.16px;
+  }
+
+  .list.insights .list-items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .list {
+    --list-gap: 24px;
+
+    padding-block: 40px;
+  }
+
+  .list.themes {
+    margin-inline: 0;
+  }
+
+  .list .list-header {
+    margin-bottom: 40px;
+  }
+
+  .list .list-title {
+    font-size: 40px;
+    line-height: 56px;
+    letter-spacing: -1px;
+  }
+
+  .list.themes .list-items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
+
+  .list .list-progress {
+    display: none;
+  }
+
+  .list .list-theme-card .list-card-title {
+    font-size: 22px;
+    line-height: 28px;
+    letter-spacing: -0.5px;
+  }
+
+  .list.insights .list-items {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .list .list-featured {
+    min-height: 480px;
+  }
+
+  .list .list-featured .list-card-body {
+    padding: 40px;
+  }
+
+  .list .list-featured .list-card-title {
+    font-size: 40px;
+    line-height: 50px;
+    letter-spacing: -1.2px;
+  }
+}
+
+@media (width >= 1200px) {
+  main > .section > .list-wrapper {
+    padding: 0 80px;
+  }
+
+  .list {
+    padding-block: 80px;
+  }
+
+  .list .list-header-action .list-link {
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 16px 12px 24px;
+    box-sizing: border-box;
+    border: 1px solid var(--list-neutral-color);
+    border-radius: 9999px;
+    background-color: #f5f5f5;
+    color: var(--list-neutral-color);
+  }
+
+  .list .list-theme-card .list-card-title {
+    font-size: 28px;
+    line-height: 34px;
+    letter-spacing: -0.84px;
+  }
+
+  .list .list-featured {
+    min-height: 570px;
+  }
+
+  .list .list-featured .list-card-title {
+    font-size: 48px;
+    line-height: 58px;
+    letter-spacing: -1.44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list .list-arrow {
+    transition: none;
+  }
+}

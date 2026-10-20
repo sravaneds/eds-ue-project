@@ -16,6 +16,7 @@
       "hero",
       "cards",
       "columns",
+      "list",
       "fragment",
       "tab"
     ]
@@ -39,6 +40,13 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "list",
+    "components": [
+      "list-theme",
+      "list-insight"
     ]
   },
   {

@@ -510,6 +510,264 @@
     ]
   },
   {
+    "id": "list",
+    "fields": [
+      {
+        "component": "select",
+        "name": "classes",
+        "label": "Variation",
+        "description": "Themes: a row of theme cards. Insights: a featured card followed by supporting cards.",
+        "valueType": "string",
+        "value": "themes",
+        "options": [
+          {
+            "name": "Themes",
+            "value": "themes"
+          },
+          {
+            "name": "Insights",
+            "value": "insights"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Heading",
+        "description": "Section heading, e.g. \"The future in focus\"",
+        "required": true,
+        "validation": {
+          "maxLength": 80
+        }
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "link",
+        "label": "Header Link",
+        "description": "Optional link shown next to the heading, e.g. to the insights listing"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Header Link Text",
+        "description": "e.g. \"Explore insights\"",
+        "validation": {
+          "maxLength": 40
+        }
+      }
+    ]
+  },
+  {
+    "id": "list-theme",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Background Image",
+        "description": "Optional. With an image, the card shows the picture with dark text.",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Background Image Alt Text",
+        "description": "Leave empty if the image is purely decorative"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "eyebrow",
+        "label": "Eyebrow",
+        "description": "Short theme label, e.g. \"AI adoption\"",
+        "validation": {
+          "maxLength": 40
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "required": true,
+        "validation": {
+          "maxLength": 90
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "description",
+        "label": "Description",
+        "validation": {
+          "maxLength": 180
+        }
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "link",
+        "label": "Link",
+        "description": "The whole card links here"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Link Text",
+        "description": "Defaults to \"Explore\". Not shown on image cards, where the title is the link.",
+        "validation": {
+          "maxLength": 30
+        }
+      },
+      {
+        "component": "select",
+        "name": "surface",
+        "label": "Card Colour",
+        "description": "Used when the card has no background image",
+        "valueType": "string",
+        "value": "dark",
+        "options": [
+          {
+            "name": "Dark",
+            "value": "dark"
+          },
+          {
+            "name": "Brand blue",
+            "value": "brand"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "list-insight",
+    "fields": [
+      {
+        "component": "select",
+        "name": "variant",
+        "label": "Card Type",
+        "description": "Featured: full-width card with the image as background. Report: text card without image. Case study: tall image.",
+        "valueType": "string",
+        "value": "article",
+        "options": [
+          {
+            "name": "Article",
+            "value": "article"
+          },
+          {
+            "name": "Featured",
+            "value": "featured"
+          },
+          {
+            "name": "Report",
+            "value": "report"
+          },
+          {
+            "name": "Case study",
+            "value": "case-study"
+          }
+        ]
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "description": "Not shown on Report cards",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Image Alt Text",
+        "description": "Leave empty if the image is purely decorative"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tags",
+        "label": "Tags",
+        "description": "Separate with commas, e.g. \"Banking, Core modernisation\"",
+        "validation": {
+          "maxLength": 80
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "readTime",
+        "label": "Read Time",
+        "description": "e.g. \"14m\"",
+        "validation": {
+          "maxLength": 10
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "required": true,
+        "validation": {
+          "maxLength": 120
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "description",
+        "label": "Description",
+        "description": "Shown on Report cards",
+        "validation": {
+          "maxLength": 180
+        }
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "link",
+        "label": "Link",
+        "description": "The whole card links here"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Link Text",
+        "description": "Shown on Report cards, e.g. \"Download\"",
+        "validation": {
+          "maxLength": 30
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "format",
+        "label": "Content Type",
+        "description": "e.g. \"Blog\" or \"Perspective\"",
+        "validation": {
+          "maxLength": 30
+        }
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "date",
+        "label": "Date",
+        "description": "As it should appear, e.g. \"15th Oct 2026\"",
+        "validation": {
+          "maxLength": 30
+        }
+      }
+    ]
+  },
+  {
     "id": "tab",
     "fields": [
       {
