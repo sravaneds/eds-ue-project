@@ -13,3 +13,23 @@ body.article .article-details {
 body.article .article-details li {
   margin: 0;
 }
+
+/* page tags (taxonomy) */
+body.article .article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -8px 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+body.article .article-tags li {
+  margin: 0;
+  padding: 4px 12px;
+  border: 1px solid var(--dark-color);
+  border-radius: 9999px;
+  font-size: var(--body-font-size-xs);
+  line-height: 1.5;
+  color: var(--dark-color);
+}

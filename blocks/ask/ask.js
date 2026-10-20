@@ -1,3 +1,5 @@
+import { fetchPlaceholders, placeholder as placeholderText } from '../../scripts/placeholders.js';
+
 let askCount = 0;
 
 /**
@@ -137,4 +139,10 @@ export default function decorate(block) {
   }
 
   block.replaceChildren(...content);
+
+  // button labels can be reworded or translated in the placeholders sheet
+  fetchPlaceholders().then((placeholders) => {
+    submit.setAttribute('aria-label', placeholderText(placeholders, 'sendQuestion', 'Send question'));
+    mic?.setAttribute('aria-label', placeholderText(placeholders, 'askByVoice', 'Ask by voice'));
+  });
 }

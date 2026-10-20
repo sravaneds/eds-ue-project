@@ -1,0 +1,18 @@
+{
+  "total": 9,
+  "offset": 0,
+  "limit": 9,
+  "data": [
+    { "Key": "by", "Text": "Written by" },
+    { "Key": "published", "Text": "Published on" },
+    { "Key": "tags", "Text": "Topics" },
+    { "Key": "data table search", "Text": "Find an office" },
+    { "Key": "data table showing", "Text": "Showing {0} of {1} offices" },
+    { "Key": "data table no results", "Text": "No office matches your search" },
+    { "Key": "data table empty", "Text": "No offices to show yet." },
+    { "Key": "send question", "Text": "Send your question" },
+    { "Key": "ask by voice", "Text": "Ask with your voice" }
+  ],
+  "columns": ["Key", "Text"],
+  ":type": "sheet"
+}

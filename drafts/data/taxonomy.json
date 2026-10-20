@@ -1,0 +1,15 @@
+{
+  "total": 6,
+  "offset": 0,
+  "limit": 6,
+  "data": [
+    { "tag": "eds-demo:topic/", "title": "Topic" },
+    { "tag": "eds-demo:topic/agentic-ai", "title": "Agentic AI" },
+    { "tag": "eds-demo:topic/cloud", "title": "Cloud modernisation" },
+    { "tag": "eds-demo:industry/", "title": "Industry" },
+    { "tag": "eds-demo:industry/banking", "title": "Banking & Financial Services" },
+    { "tag": "eds-demo:content-type/perspective", "title": "Perspective" }
+  ],
+  "columns": ["tag", "title"],
+  ":type": "sheet"
+}

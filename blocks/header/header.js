@@ -43,8 +43,9 @@ function menuButton(className, icon = 'menu') {
  * @returns {Element[]} Brand elements
  */
 function buildBrand(section) {
-  if (!section) return [];
-  const pictures = [...section.querySelectorAll('picture')];
+  const pictures = section ? [...section.querySelectorAll('picture')] : [];
+  // no logo, no home link: an empty link would still be focusable
+  if (!pictures.length) return [];
   const link = section.querySelector('a[href]');
   const home = document.createElement('a');
   home.className = 'nav-brand';
