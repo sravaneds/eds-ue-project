@@ -72,6 +72,20 @@
               "value": "new"
             }
           ]
+        },
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "nav",
+          "label": "Navigation",
+          "description": "Page holding this page's header (logos, menu links, ask bar). Defaults to /nav."
+        },
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "footer",
+          "label": "Footer",
+          "description": "Page holding this page's footer. Defaults to /footer."
         }
       ]
     }

@@ -71,6 +71,20 @@
             "value": "new"
           }
         ]
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "nav",
+        "label": "Navigation",
+        "description": "Page holding this page's header (logos, menu links, ask bar). Defaults to /nav."
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "footer",
+        "label": "Footer",
+        "description": "Page holding this page's footer. Defaults to /footer."
       }
     ]
   },
@@ -394,6 +408,36 @@
             true
           ]
         }
+      }
+    ]
+  },
+  {
+    "id": "ask",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "placeholder",
+        "label": "Prompt Text",
+        "description": "Shown inside the empty input, e.g. \"Ask us about transformational AI\". Also used as the input's label for screen readers.",
+        "required": true,
+        "validation": {
+          "maxLength": 60
+        }
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "link",
+        "label": "Answer Page",
+        "description": "Page that answers the question. The question is sent as ?q=… Leave empty to stay on the current page."
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "suggestions",
+        "label": "Suggested Questions",
+        "description": "Optional. A bulleted list; each item becomes a chip that asks that question."
       }
     ]
   },

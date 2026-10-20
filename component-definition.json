@@ -107,6 +107,22 @@
       "id": "blocks",
       "components": [
         {
+          "title": "Ask",
+          "id": "ask",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ask",
+                  "model": "ask",
+                  "placeholder": "Ask us a question"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Cards",
           "id": "cards",
           "plugins": {
